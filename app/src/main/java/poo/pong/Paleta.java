@@ -1,4 +1,4 @@
-package jgame.gradle;
+package poo.pong;
 import jgame.gradle.ObjetoGraficoMovible;
 import jgame.gradle.ObjetoGrafico;
 
