@@ -1,4 +1,4 @@
-package jgame.gradle;
+package org.example;
 
 import java.awt.*;
 import java.awt.geom.*;
