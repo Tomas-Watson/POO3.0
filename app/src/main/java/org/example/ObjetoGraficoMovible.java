@@ -1,4 +1,4 @@
-package jgame.gradle;
+package org.example;
 
 // import processing.core.*;
 

@@ -1,6 +1,5 @@
 package poo.pong;
-import jgame.gradle.ObjetoGraficoMovible;
-import jgame.gradle.ObjetoGrafico;
+
 import java.awt.*;
 
 
@@ -41,28 +40,26 @@ public class Contador extends ObjetoGrafico{
     public void dibujar(Graphics2D g, Fondo fondo) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Consolas", Font.PLAIN, 60));
-        g.drawString("Jugador 1: " + J1ptos, 10, 20);
-        g.drawString("Jugador 2: " + J2ptos, 10, 40);
+        FontMetrics fm = g.getFontMetrics();
+        int y1 = 40; // Primer texto
+        int y2 = y1 + fm.getHeight(); // Segundo texto, debajo del primero
+        g.drawString("Jugador 1: " + J1ptos, 10, y1);
+        g.drawString("Jugador 2: " + J2ptos, 10, y2);
     }
 
-    public void Moatrarganador(Graphics2D g, Fondo fondo){
+    public void mostrarGanador(Graphics2D g, Fondo fondo) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 50));
+        String mensajeGanador = (J1ptos > J2ptos) ? "Jugador 1 Gana" : "Jugador 2 Gana";
         FontMetrics metrics = g.getFontMetrics();
-        String ganador = "Ganador";
-        int x = (fondo.getWidth() - metrics.stringWidth(ganador)) / 2;
+        int x = (fondo.getWidth() - metrics.stringWidth(mensajeGanador)) / 2;
         int y = fondo.getHeight() / 2;
-        if (J1ptos > J2ptos){
-            g.drawString("Jugador 1 Gana", x, y);
-        }else{
-            g.drawString("Jugador 2 Gana", x, y);
-        }
+        g.drawString(mensajeGanador, x, y);
 
-        g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         FontMetrics metrics2 = g.getFontMetrics();
-        int xx = (fondo.getWidth() - metrics2.stringWidth("Para reiniciar presione Enter")) / 2;
-        int yy = fondo.getHeight() / 2;
-        g.drawString("Para reiniciar presione Enter", xx, yy + 30);
+        String reiniciar = "Para reiniciar presione Enter";
+        int xx = (fondo.getWidth() - metrics2.stringWidth(reiniciar)) / 2;
+        g.drawString(reiniciar, xx, y + 40);
     }
 }

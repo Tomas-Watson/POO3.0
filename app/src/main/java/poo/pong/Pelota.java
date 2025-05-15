@@ -1,20 +1,15 @@
 package poo.pong;
-import jgame.gradle.ObjetoGraficoMovible;
-import jgame.gradle.ObjetoGrafico;
+import org.example.ObjetoGraficoMovible;
+import org.example.ObjetoGrafico;
 
-public class Pelota implements ObjetoGraficoMovible {
+public class Pelota extends ObjetoGrafico implements ObjetoGraficoMovible {
     private final int RADIO = 10;
-    private int dx = 5;
-    private int dy = 5;
+    private int dx=5 ;
+    private int dy=5 ;
 
     public Pelota(int x, int y){
-        this.dx = x;
-        this.dy = y;
-    }
-
-    public void moverse() {
-        this.dx += dx;
-        this.dy += dy;
+        this.positionX = x;
+        this.positionY = y;
     }
 
     public void rebotar(){
@@ -27,19 +22,18 @@ public class Pelota implements ObjetoGraficoMovible {
 
     @Override
     public void moverse(double delta) {
-        //
+        this.positionX += dx * delta;
+        this.positionY += dy * delta;
     }
 
     @Override
     public double getX() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getX'");
+       return this.positionX;
     }
 
     @Override
     public double getY() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getY'");
+        return this.positionY;
     }
 
 }
