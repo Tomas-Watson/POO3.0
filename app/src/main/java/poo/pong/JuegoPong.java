@@ -38,8 +38,8 @@ public class JuegoPong extends JGame {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
         //fondo = new Fondo() adentro del Fondo hay que poner el nombre de la imagen
         //pelota= new Pelota(100, 100);
-        p1= new Paleta(10, 100, Color.WHITE);
-        p2= new Paleta(10, 100);
+        p1= new Paleta();
+        p2= new Paleta();
     }
 
     @Override
@@ -132,7 +132,22 @@ public class JuegoPong extends JGame {
         enPausa = false;
     } 
     
-    public void limitesPaletas(Paleta p1, Paleta p2) {
+   
+
+    public moverse(){}
+
+
+
+
+
+
+
+
+
+
+
+
+     public void limitesPaletas(Paleta p1, Paleta p2) {
         final int PADDING_TOP = 32;
         final int PADDING_BOTTOM = 0;
         if (p1.getY() < PADDING_TOP) {
@@ -148,8 +163,4 @@ public class JuegoPong extends JGame {
             p2.setY(fondo.getHeight() - PADDING_BOTTOM - p2.getAlto());
         }
     }
-
-    public moverse(){}
-
-
 }
