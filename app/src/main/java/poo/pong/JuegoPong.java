@@ -147,5 +147,21 @@ public class JuegoPong extends JGame {
 
     }
 
+    public void limitesPaletas(Paleta p1, Paleta p2) {
+        final int PADDING_TOP = 32;
+        final int PADDING_BOTTOM = 0;
+        if (p1.getY() < PADDING_TOP) {
+            p1.setY(PADDING_TOP);
+        }
+        if (p1.getY() + p1.getAlto() > fondo.getHeight() - PADDING_BOTTOM) {
+            p1.setY(fondo.getHeight() - PADDING_BOTTOM - p1.getAlto());
+        }
+        if (p2.getY() < PADDING_TOP) {
+            p2.setY(PADDING_TOP);
+        }
+        if (p2.getY() + p2.getAlto() > fondo.getHeight() - PADDING_BOTTOM) {
+            p2.setY(fondo.getHeight() - PADDING_BOTTOM - p2.getAlto());
+        }
+    }
 
 }
