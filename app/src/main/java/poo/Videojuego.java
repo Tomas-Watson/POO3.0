@@ -6,6 +6,9 @@ import com.entropyinteractive.JGame;
 
 public class Videojuego extends JGame {
 
+    public static void Main(String[] args){
+        
+    }
     public Videojuego(String arg0, int arg1, int arg2) {
         super(arg0, arg1, arg2);
         //TODO Auto-generated constructor stub
@@ -34,5 +37,7 @@ public class Videojuego extends JGame {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'gameUpdate'");
     }
+
+
     
 }
