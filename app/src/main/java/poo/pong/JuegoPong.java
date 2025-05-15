@@ -40,8 +40,8 @@ public class JuegoPong extends JGame {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
         //fondo = new Fondo() adentro del Fondo hay que poner el nombre de la imagen
         pelota= new Pelota(100, 100);
-        p1= new Paleta(10, 100);
-        p2= new Paleta(10, 100);
+        p1= new Paleta();
+        p2= new Paleta();
     }
 
     @Override
@@ -116,13 +116,13 @@ public class JuegoPong extends JGame {
        //movimiento de las paletas
 
         if (keyboard.isKeyPressed(KeyEvent.VK_UP)){
-            paleta.setY(paleta.getY() - velocidad * delta);
+            p1.setY(p1.getY() - velocidad * delta);
             //shipY -= NAVE_DESPLAZAMIENTO * delta;
         }
 
         if (keyboard.isKeyPressed(KeyEvent.VK_DOWN)){
             //shipY += NAVE_DESPLAZAMIENTO * delta;
-            paleta.setY(paleta.getY() + velocidad * delta);
+            p1.setY(p1.getY() + velocidad * delta);
         }
 
        if(!enPausa){
