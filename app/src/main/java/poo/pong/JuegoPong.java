@@ -37,8 +37,8 @@ public class JuegoPong extends JGame {
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
         //fondo = new Fondo() adentro del Fondo hay que poner el nombre de la imagen
-        pelota= new Pelota(100, 100);
-        p1= new Paleta(10, 100);
+        //pelota= new Pelota(100, 100);
+        p1= new Paleta(10, 100, Color.WHITE);
         p2= new Paleta(10, 100);
     }
 
@@ -116,7 +116,9 @@ public class JuegoPong extends JGame {
             p1.moverse(arg0);
        }
        // Mover la pelota
+       pelota.moverse(2.0);
        // Colisión de la pelota con los bordes
+
        // Colisión de la pelota con las paletas
        //colision de la pelota en los laterales (GOL)
         }
@@ -130,6 +132,23 @@ public class JuegoPong extends JGame {
         enPausa = false;
     } 
     
+    public void limitesPaletas(Paleta p1, Paleta p2) {
+        final int PADDING_TOP = 32;
+        final int PADDING_BOTTOM = 0;
+        if (p1.getY() < PADDING_TOP) {
+            p1.setY(PADDING_TOP);
+        }
+        if (p1.getY() + p1.getAlto() > fondo.getHeight() - PADDING_BOTTOM) {
+            p1.setY(fondo.getHeight() - PADDING_BOTTOM - p1.getAlto());
+        }
+        if (p2.getY() < PADDING_TOP) {
+            p2.setY(PADDING_TOP);
+        }
+        if (p2.getY() + p2.getAlto() > fondo.getHeight() - PADDING_BOTTOM) {
+            p2.setY(fondo.getHeight() - PADDING_BOTTOM - p2.getAlto());
+        }
+    }
+
     public moverse(){}
 
 

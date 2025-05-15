@@ -15,8 +15,9 @@ public class Paleta extends ObjetoGrafico implements ObjetoGraficoMovible {
     private int ancho= 10;
     private int alto= 100;
     private int velocidad= 10;
+    private Keyboard keyboard;
 
-    public Paleta(double x, double y, Color color){
+    public Paleta(double x, double y, Color color, Keyboard keyboard){
         super("paleta.png");
         this.positionX = x;
         this.positionY = y;
@@ -27,13 +28,14 @@ public class Paleta extends ObjetoGrafico implements ObjetoGraficoMovible {
         g2d.setColor(color);
         g2d.fillRect(0, 0, ancho, alto);
         g2d.dispose();
+        this.keyboard = keyboard;
     }
    
     @Override
     public void moverse(double delta) {
-        if(Keyboard.iskeyDown(Keyboard.VK_UP)){
+        if(keyboard.isKeyPressed(KeyEvent.VK_UP)){
             this.positionY -= velocidad * delta;
-        }else if(Keyboard.iskeyDown(Keyboard.VK_DOWN)){
+        }else if(keyboard.isKeyPressed(KeyEvent.VK_DOWN)){
             this.positionY += velocidad * delta;
         }
     }
