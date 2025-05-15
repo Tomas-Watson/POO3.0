@@ -15,7 +15,7 @@ public class Pelota extends ObjetoGrafico implements ObjetoGraficoMovible {
         this.color = color;
     }
 
-    public void rebotar(){
+    public void rebotarHorizontal(){
         dx = -dx;
     }
 
@@ -39,4 +39,15 @@ public class Pelota extends ObjetoGrafico implements ObjetoGraficoMovible {
         return this.positionY;
     }
 
+    public void setX(Double x) {
+        this.positionX = x;
+    }
+
+    public void setY(Double y) {
+        this.positionY = y;
+    }
+
+    public void rebotarVertical() {
+       dy = -dy;
+    }
 }

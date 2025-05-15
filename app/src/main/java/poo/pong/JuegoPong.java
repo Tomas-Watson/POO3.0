@@ -93,52 +93,111 @@ public class JuegoPong extends JGame {
         throw new UnsupportedOperationException("Unimplemented method 'gameShutdown'");
     }
 
-   
-
     @Override
     public void gameUpdate(double delta) {
-       if(!finJuego){
-        Keyboard keyboard = this.getKeyboard();
-        // Verificar si se presiona 'P' para pausar/reanudar el juego
-        if(keyboard.isKeyPressed(KeyEvent.VK_P)){
-            if(!pPresionado && !finJuego){
-                enPausa = !enPausa;
-                pPresionado = true;
-            }else{
+        if (!finJuego) {
+            Keyboard keyboard = this.getKeyboard();
+
+            // Pausar/reanudar el juego con 'P'
+            if (keyboard.isKeyPressed(KeyEvent.VK_P)) {
+                if (!pPresionado) {
+                    enPausa = !enPausa;
+                    pPresionado = true;
+                }
+            } else {
                 pPresionado = false;
             }
-        }
-       //Verificar si se presiona 'Enter' para reiniciar el juego
-       if(keyboard.isKeyPressed(KeyEvent.VK_ENTER)){
-            if(!pPresionado && !finJuego){
-                reiniciarJuego();
-                enterPresionado = true;
-            }else{
+
+            // Reiniciar el juego con 'Enter'
+            if (keyboard.isKeyPressed(KeyEvent.VK_ENTER)) {
+                if (!enterPresionado) {
+                    reiniciarJuego();
+                    enterPresionado = true;
+                }
+            } else {
                 enterPresionado = false;
             }
-       }
-       //movimiento de las paletas
-       if(!enPausa){       
-        if (keyboard.isKeyPressed(KeyEvent.VK_UP)){
-            p1.setY(p1.getY() - velocidad * delta);
-            //shipY -= NAVE_DESPLAZAMIENTO * delta;
-        }
 
-        if (keyboard.isKeyPressed(KeyEvent.VK_DOWN)){
-            //shipY += NAVE_DESPLAZAMIENTO * delta;
-            p1.setY(p1.getY() + velocidad * delta);
-        }
+            if (!enPausa) {
+                // Movimiento paleta 1
+                if (keyboard.isKeyPressed(KeyEvent.VK_UP)) {
+                    p1.setY(p1.getY() - velocidad * delta);
+                }
+                if (keyboard.isKeyPressed(KeyEvent.VK_DOWN)) {
+                    p1.setY(p1.getY() + velocidad * delta);
+                }
 
+                // Movimiento paleta 2 (opcional: puedes usar W/S para el jugador 2)
+                if (keyboard.isKeyPressed(KeyEvent.VK_W)) {
+                    p2.setY(p2.getY() - velocidad * delta);
+                }
+                if (keyboard.isKeyPressed(KeyEvent.VK_S)) {
+                    p2.setY(p2.getY() + velocidad * delta);
+                }
 
-       }
-       // Mover la pelota
-       // Colisión de la pelota con los bordes
-       // Colisión de la pelota con las paletas
-       //colision de la pelota en los laterales (GOL)
+                // Limitar paletas dentro del área de juego
+                limitesPaletas(p1, p2);
+
+                // Mover la pelota
+                moverPelota(delta);
+
+                // Colisiones
+                colisionBordes();
+                colisionPaletas();
+
+                // Goles
+                verificarGol();
+            }
         }
     }
 
-    
+    // Mueve la pelota según su velocidad
+    private void moverPelota(double delta) {
+        pelota.moverse(delta);
+    }
+
+    // Rebota la pelota si toca el borde superior/inferior
+    private void colisionBordes() {
+        if (pelota.getY() <= 0 || pelota.getY() + pelota.getRadio() * 2 >= fondo.getHeight()) {
+            pelota.rebotarVertical();
+        }
+    }
+
+    // Rebota la pelota si choca con una paleta
+    private void colisionPaletas() {
+        // Paleta 1
+        if (pelota.getX() <= p1.getX() + p1.getAncho() &&
+            pelota.getY() + pelota.getRadio() * 2 >= p1.getY() &&
+            pelota.getY() <= p1.getY() + p1.getAlto()) {
+            pelota.rebotarHorizontal();
+        }
+        // Paleta 2
+        if (pelota.getX() + pelota.getRadio() * 2 >= p2.getX() &&
+            pelota.getY() + pelota.getRadio() * 2 >= p2.getY() &&
+            pelota.getY() <= p2.getY() + p2.getAlto()) {
+            pelota.rebotarHorizontal();
+        }
+    }
+
+    // Detecta si hay gol y suma puntos
+    private void verificarGol() {
+        if (pelota.getX() < 0) {
+            contador.sumarPuntos(2); // Gol para jugador 2
+            reiniciarPosiciones();
+        } else if (pelota.getX() + pelota.getRadio() * 2 > fondo.getWidth()) {
+            contador.sumarPuntos(1); // Gol para jugador 1
+            reiniciarPosiciones();
+        }
+    }
+
+    // Reinicia posiciones de pelota y paletas tras un gol
+    private void reiniciarPosiciones() {
+        pelota.setX((double)fondo.getWidth() / 2);
+        pelota.setX((double)fondo.getHeight() / 2);
+        p1.setY(fondo.getHeight() / 2 - p1.getAlto() / 2);
+        p2.setY(fondo.getHeight() / 2 - p2.getAlto() / 2);
+    }
+
     public void reiniciarJuego() {
         contador.setJ1ptos(0);
         contador.setJ2ptos(0);
