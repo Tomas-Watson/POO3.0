@@ -8,6 +8,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.text.*;
 import java.awt.*;
+import java.awt.RenderingHints.Key;
 import java.io.*;
 
 import poo.Videojuego;
@@ -46,14 +47,14 @@ public class JuegoPong extends JGame {
         // dibujar el fondo
         fondo.display(g);
         //dibujar raquetas
-        //p1.display(g);
-        //p2.display(g);
+        p1.display(g);
+        p2.display(g);
         //dibujar pelota
-        /*if(!finJuego){
+        if(!finJuego){
             g.setColor(Color.WHITE);
             g.fill(pelota.getGrafico());
         }
-        */
+        
 
         //dibujar contador
         contador.dibujar(g, fondo);
@@ -90,13 +91,46 @@ public class JuegoPong extends JGame {
 
     @Override
     public void gameUpdate(double arg0) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'gameUpdate'");
+       if(!finJuego){
+        Keyboard keyboard = getKeyboard();
+        // Verificar si se presiona 'P' para pausar/reanudar el juego
+        if(keyboard.isKeyPressed(KeyEvent.VK_P)){
+            if(!pPresionado && !finJuego){
+                enPausa = !enPausa;
+                pPresionado = true;
+            }else{
+                pPresionado = false;
+            }
+        }
+       //Verificar si se presiona 'Enter' para reiniciar el juego
+       if(keyboard.isKeyPressed(KeyEvent.VK_ENTER)){
+            if(!pPresionado && !finJuego){
+                reiniciarJuego();
+                enterPresionado = true;
+            }else{
+                enterPresionado = false;
+            }
+       }
+       //movimiento de las paletas
+       if(!enPausa){
+            p1.moverse(arg0);
+       }
+       // Mover la pelota
+       // Colisión de la pelota con los bordes
+       // Colisión de la pelota con las paletas
+       //colision de la pelota en los laterales (GOL)
+        }
     }
 
     
-
-
+    public void reiniciarJuego() {
+        contador.setJ1ptos(0);
+        contador.setJ2ptos(0);
+        finJuego = false;
+        enPausa = false;
+    } 
+    
+    public moverse(){}
 
 
 }
