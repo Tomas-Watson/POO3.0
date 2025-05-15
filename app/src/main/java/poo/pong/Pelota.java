@@ -1,13 +1,14 @@
 package poo.pong;
-import org.example.ObjetoGraficoMovible;
 import org.example.ObjetoGrafico;
+import org.example.ObjetoGraficoMovible;
 
 public class Pelota extends ObjetoGrafico implements ObjetoGraficoMovible {
     private final int RADIO = 10;
     private int dx=5 ;
     private int dy=5 ;
 
-    public Pelota(int x, int y){
+    public Pelota(String filename, int x, int y){
+        super(filename);
         this.positionX = x;
         this.positionY = y;
     }
