@@ -1,5 +1,6 @@
 package org.example;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -12,7 +13,9 @@ public class ObjetoGrafico {
 	protected double positionX = 0;
 	protected double positionY = 0;
 	
-    public ObjetoGrafico(String filename) {
+    
+	
+	public ObjetoGrafico(String filename) {
     		try {
 				imagen= ImageIO.read(getClass().getClassLoader().getResourceAsStream(filename));
 
@@ -21,7 +24,12 @@ public class ObjetoGrafico {
 			}
     }
 
-	public int getWidth(){
+	public ObjetoGrafico(double x, double y) {
+		this.positionX = x;
+		this.positionY = y;
+    }
+
+    public int getWidth(){
 		return imagen.getWidth();
 	}
 	public int getHeight(){

@@ -20,6 +20,9 @@ import com.entropyinteractive.Log;
 public class JuegoPong extends JGame {
 
     private Fondo fondo;
+    private Color p1Color = Color.RED;
+    private Color p2Color = Color.BLUE;
+    private Color pelotaColor = Color.WHITE;	
     private Pelota pelota;
     private Paleta p1;
     private Paleta p2;
@@ -39,9 +42,11 @@ public class JuegoPong extends JGame {
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
         //fondo = new Fondo() adentro del Fondo hay que poner el nombre de la imagen
-        pelota= new Pelota(100, 100);
-        p1= new Paleta();
-        p2= new Paleta();
+        fondo = new Fondo("app.src.main.resources.imagenes.background.png");
+        p1 = new Paleta(p1Color, 50, 250);
+        p2 = new Paleta(p2Color, 50,250);
+        contador = new Contador(0,0);
+        pelota = new Pelota(pelotaColor, 100, 100);
     }
 
     @Override
@@ -54,7 +59,6 @@ public class JuegoPong extends JGame {
         //dibujar pelota
         if(!finJuego){
             g.setColor(Color.WHITE);
-            g.fill(pelota.getGrafico());
         }
         
 

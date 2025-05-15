@@ -1,5 +1,6 @@
 package poo.pong;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import org.example.ObjetoGrafico; //eventos
@@ -7,34 +8,34 @@ import org.example.ObjetoGrafico; //eventos
 public class Paleta extends ObjetoGrafico{
     private int ancho= 10;
     private int alto= 100;
+    private Color color;
+
     
 
-    private Point2D.Double posicion  = new Point2D.Double();
-
-    public Paleta(String filename){
-        super("paleta.png");
+    public Paleta(Color color, double x, double y){
+        super(x, y); // Call the appropriate ObjetoGrafico constructor
+        this.color = color;
+       
     }
 
-    public void setPosicion(double x, double y){
-        posicion.setLocation(x,y);
-    }
+   
 
     public void setX(double x){
-        posicion.x=x;
+        this.positionX=x;
     }
 
     public void setY(double y){
-        posicion.y=y;
+        this.positionY=y;
     }
 
     @Override
     public double getX(){
-        return posicion.getX();
+        return this.positionX;
     }
 
     @Override
     public double getY(){
-        return posicion.getY();
+        return this.positionY;
     }
     
     public int getAlto(){

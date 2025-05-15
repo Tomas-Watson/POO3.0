@@ -1,4 +1,6 @@
 package poo.pong;
+import java.awt.Color;
+
 import org.example.ObjetoGrafico;
 import org.example.ObjetoGraficoMovible;
 
@@ -6,11 +8,11 @@ public class Pelota extends ObjetoGrafico implements ObjetoGraficoMovible {
     private final int RADIO = 10;
     private int dx=5 ;
     private int dy=5 ;
+    private Color color;
 
-    public Pelota(String filename, int x, int y){
-        super(filename);
-        this.positionX = x;
-        this.positionY = y;
+    public Pelota(Color color, int x, int y){
+        super(x, y);
+        this.color = color;
     }
 
     public void rebotar(){

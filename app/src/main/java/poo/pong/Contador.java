@@ -12,10 +12,9 @@ public class Contador extends ObjetoGrafico{
     private int J1ptos=0;
     private int J2ptos=0;
 
-    public Contador(String filename,int J1ptos, int J2ptos){
-        super(filename);
-        this.J1ptos= J1ptos;
-        this.J2ptos= J2ptos;
+    public Contador(double x, double y){
+        super(x,y);
+        
     }
 
     public void setJ1ptos(int J1ptos) {
