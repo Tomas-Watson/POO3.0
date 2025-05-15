@@ -1,17 +1,16 @@
 package org.example;
 
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
-import java.awt.image.*;
-import javax.imageio.*;
-import java.io.*;
+import javax.imageio.ImageIO;
 
 public class ObjetoGrafico {
 	protected BufferedImage imagen = null;
 
-	double positionX = 0;
-	double positionY = 0;
+	protected double positionX = 0;
+	protected double positionY = 0;
 	
     public ObjetoGrafico(String filename) {
     		try {
