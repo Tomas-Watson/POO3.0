@@ -29,6 +29,8 @@ public class JuegoPong extends JGame {
     private boolean pPresionado = false;
     private boolean enterPresionado = false;
 
+    final double velocidad = 150.0;
+
     public JuegoPong(String arg0, int arg1, int arg2) {
         super("Pong", 800, 600);
     }
@@ -90,9 +92,9 @@ public class JuegoPong extends JGame {
    
 
     @Override
-    public void gameUpdate(double arg0) {
+    public void gameUpdate(double delta) {
        if(!finJuego){
-        Keyboard keyboard = getKeyboard();
+        Keyboard keyboard = this.getKeyboard();
         // Verificar si se presiona 'P' para pausar/reanudar el juego
         if(keyboard.isKeyPressed(KeyEvent.VK_P)){
             if(!pPresionado && !finJuego){
@@ -112,6 +114,17 @@ public class JuegoPong extends JGame {
             }
        }
        //movimiento de las paletas
+
+        if (keyboard.isKeyPressed(KeyEvent.VK_UP)){
+            paleta.setY(paleta.getY() - velocidad * delta);
+            //shipY -= NAVE_DESPLAZAMIENTO * delta;
+        }
+
+        if (keyboard.isKeyPressed(KeyEvent.VK_DOWN)){
+            //shipY += NAVE_DESPLAZAMIENTO * delta;
+            paleta.setY(paleta.getY() + velocidad * delta);
+        }
+
        if(!enPausa){
             p1.moverse(arg0);
        }
@@ -130,7 +143,9 @@ public class JuegoPong extends JGame {
         enPausa = false;
     } 
     
-    public moverse(){}
+    public void moverse(){
+
+    }
 
 
 }

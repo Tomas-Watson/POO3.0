@@ -1,40 +1,49 @@
 package poo.pong;
-import org.example.ObjetoGraficoMovible;
-import org.example.ObjetoGrafico;
 
-import java.awt.image.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.geom.Point2D;
 
+import org.example.ObjetoGrafico; //eventos
 
-import com.entropyinteractive.JGame;
-import com.entropyinteractive.Keyboard;
-import com.entropyinteractive.Log;
-
-public class Paleta extends ObjetoGrafico implements ObjetoGraficoMovible {
+public class Paleta extends ObjetoGrafico{
     private int ancho= 10;
     private int alto= 100;
-    private int velocidad= 10;
+    
 
-    public Paleta(double x, double y, Color color){
+    private Point2D.Double posicion  = new Point2D.Double();
+
+    public Paleta(String filename){
         super("paleta.png");
-        this.positionX = x;
-        this.positionY = y;
-        this.setHeight(100);
-        this.setWidth();
-        this.imagen = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = this.imagen.createGraphics();
-        g2d.setColor(color);
-        g2d.fillRect(0, 0, ancho, alto);
-        g2d.dispose();
     }
-   
+
+    public void setPosicion(double x, double y){
+        posicion.setLocation(x,y);
+    }
+
+    public void setX(double x){
+        posicion.x=x;
+    }
+
+    public void setY(double y){
+        posicion.y=y;
+    }
+
     @Override
-    public void moverse(double delta) {
-        if(Keyboard.iskeyDown(Keyboard.VK_UP)){
-            this.positionY -= velocidad * delta;
-        }else if(Keyboard.iskeyDown(Keyboard.VK_DOWN)){
-            this.positionY += velocidad * delta;
-        }
+    public double getX(){
+        return posicion.getX();
     }
+
+    @Override
+    public double getY(){
+        return posicion.getY();
+    }
+    
+    public int getAlto(){
+        return alto;
+    }
+
+    public int getAncho(){
+        return ancho;
+    }
+
+
 }
