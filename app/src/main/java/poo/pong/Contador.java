@@ -1,14 +1,19 @@
 package poo.pong;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 
-import java.awt.*;
+import org.example.Fondo;
+import org.example.ObjetoGrafico;
 
 
 public class Contador extends ObjetoGrafico{
     private int J1ptos=0;
     private int J2ptos=0;
 
-    public Contador(int J1ptos, int J2ptos){
-        
+    public Contador(String filename,int J1ptos, int J2ptos){
+        super(filename);
         this.J1ptos= J1ptos;
         this.J2ptos= J2ptos;
     }

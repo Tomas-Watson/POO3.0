@@ -127,7 +127,6 @@ public void gameUpdate(double delta) {
         long diffSeconds = dateDiff / 1000 % 60;
         long diffMinutes = dateDiff / (60 * 1000) % 60;
 
-
         g.drawImage(img_fondo,0,0,null);// imagen de fondo
 
         g.setColor(Color.black);
@@ -138,15 +137,7 @@ public void gameUpdate(double delta) {
         g.drawString("Tiempo de Juego: "+diffMinutes+":"+diffSeconds,10,40);
         g.drawString("Tecla ESC = Fin del Juego ",590,40);
 
-        
         ovni.draw(g);
-
-
-
-
-        
-
-
 
     }
 
