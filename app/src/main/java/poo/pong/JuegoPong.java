@@ -114,7 +114,7 @@ public class JuegoPong extends JGame {
             }
        }
        //movimiento de las paletas
-
+       if(!enPausa){       
         if (keyboard.isKeyPressed(KeyEvent.VK_UP)){
             p1.setY(p1.getY() - velocidad * delta);
             //shipY -= NAVE_DESPLAZAMIENTO * delta;
@@ -125,8 +125,7 @@ public class JuegoPong extends JGame {
             p1.setY(p1.getY() + velocidad * delta);
         }
 
-       if(!enPausa){
-            p1.moverse(arg0);
+
        }
        // Mover la pelota
        // Colisión de la pelota con los bordes
@@ -143,9 +142,6 @@ public class JuegoPong extends JGame {
         enPausa = false;
     } 
     
-    public void moverse(){
-
-    }
 
     public void limitesPaletas(Paleta p1, Paleta p2) {
         final int PADDING_TOP = 32;
