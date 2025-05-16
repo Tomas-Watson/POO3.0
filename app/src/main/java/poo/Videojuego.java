@@ -4,8 +4,6 @@ import java.awt.Graphics2D;
 
 import com.entropyinteractive.JGame;
 
-import poo.pong.JuegoPong;
-
 public class Videojuego extends JGame {
 
     public static void Main(String[] args){
