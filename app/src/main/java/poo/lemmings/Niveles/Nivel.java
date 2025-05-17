@@ -1,5 +1,5 @@
 package poo.lemmings.Niveles;
 
-public class Nivel {
+public abstract class Nivel {
     
 }
