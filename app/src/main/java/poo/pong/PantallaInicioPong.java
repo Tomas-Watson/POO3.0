@@ -28,7 +28,7 @@ public class PantallaInicioPong extends JFrame {
 
         //Aqui cargamos la imagen utilizando excepciones 
         try{ //con este primer bloque se carga la imagen si todo esta bien 
-            imagenFondo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("ImagenesPong/FondoPong.png"));
+            imagenFondo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("/ImagenesPong/FondoPong.png"));
         } catch (IOException ex){ //Si ocurre una excepcion pasa a este bloque, lanzando asi el mensaje de la excepcion 
             ex.printStackTrace();
             System.out.println("Error" + ex);
