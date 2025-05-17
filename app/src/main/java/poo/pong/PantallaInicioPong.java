@@ -1,13 +1,16 @@
 package poo.pong;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+import javax.swing.JFrame;
 
-public class PantallaInicioPong {
+public class PantallaInicioPong extends JFrame {
     
+    public PantallaInicioPong(){
+        setTitle("Inicio del Juego");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(900,600);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        
+    }
 }
