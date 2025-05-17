@@ -1,10 +1,20 @@
 package poo.lemmings;
 
-import poo.Videojuego;
+
 import java.awt.*;
-public class JuegoLemmings extends Videojuego {
-    public JuegoLemmings(String arg0, int arg1, int arg2) {
-        super(arg0, arg1, arg2);
+
+import com.entropyinteractive.JGame;
+
+public class JuegoLemmings extends JGame {
+   
+
+    private boolean enPausa = false;
+    private boolean finJuego = false;
+    private boolean pPresionado = false;
+    private boolean enterPresionado = false;
+    
+    public JuegoLemmings(){
+        super("Pong", 800, 600);
     }
 
     @Override
