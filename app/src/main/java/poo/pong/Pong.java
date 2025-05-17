@@ -43,7 +43,7 @@ public class Pong extends JGame{
         p1 = new Paleta(p1Color, 50, 250);
         p2 = new Paleta(p2Color, 50,250);
         contador = new Contador(0,0);
-        pelota = new Pelota(pelotaColor, 100, 100);
+        pelota = new Pelota(pelotaColor, 700, 100);
     }
 
     @Override

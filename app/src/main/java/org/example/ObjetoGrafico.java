@@ -23,7 +23,7 @@ public class ObjetoGrafico {
 				System.out.println("ZAS! en ObjectoGrafico "+e);
 			}
     }
-
+	//para el  pong
 	public ObjetoGrafico(double x, double y) {
 		this.positionX = x;
 		this.positionY = y;
