@@ -12,6 +12,8 @@ import com.entropyinteractive.JGame;
 import com.entropyinteractive.Keyboard;
 import com.entropyinteractive.Log;
 
+import poo.DetectorColisiones;
+
 public class Pong extends JGame{
     
     private Fondo fondo;
@@ -134,61 +136,32 @@ public class Pong extends JGame{
                 limitesPaletas(p1, p2);
 
                 // Mover la pelota
-                moverPelota(delta);
+                pelota.moverse(delta);
 
-                // Colisiones
-                colisionBordes();
-                colisionPaletas();
+                // Colisión pelota con bordes superior/inferior
+                DetectorColisiones.colisionPelotaContraBordesSupInf(pelota, fondo);
+
+                // Colisión pelota con paletas
+                DetectorColisiones.colisionPelotaRaqueta(pelota, p1);
+                DetectorColisiones.colisionPelotaRaqueta(pelota, p2);
 
                 // Goles
-                verificarGol();
+                if (DetectorColisiones.colisionPelotaContraLateralIzquierda(pelota)) {
+                    contador.sumarPuntos(2); // Punto para jugador 2
+                    reiniciarPosiciones();
+                }
+                if (DetectorColisiones.colisionPelotaContraLateralDerecha(pelota, fondo.getWidth())) {
+                    contador.sumarPuntos(1); // Punto para jugador 1
+                    reiniciarPosiciones();
+                }
             }
         }
     }
 
-    // Mueve la pelota según su velocidad
-    private void moverPelota(double delta) {
-        pelota.moverse(delta);
-    }
-
-    // Rebota la pelota si toca el borde superior/inferior
-    private void colisionBordes() {
-        if (pelota.getY() <= 0 || pelota.getY() + pelota.getRadio() * 2 >= fondo.getHeight()) {
-            pelota.rebotarVertical();
-        }
-    }
-
-    // Rebota la pelota si choca con una paleta
-    private void colisionPaletas() {
-        // Paleta 1
-        if (pelota.getX() <= p1.getX() + p1.getAncho() &&
-            pelota.getY() + pelota.getRadio() * 2 >= p1.getY() &&
-            pelota.getY() <= p1.getY() + p1.getAlto()) {
-            pelota.rebotarHorizontal();
-        }
-        // Paleta 2
-        if (pelota.getX() + pelota.getRadio() * 2 >= p2.getX() &&
-            pelota.getY() + pelota.getRadio() * 2 >= p2.getY() &&
-            pelota.getY() <= p2.getY() + p2.getAlto()) {
-            pelota.rebotarHorizontal();
-        }
-    }
-
-    // Detecta si hay gol y suma puntos
-    private void verificarGol() {
-        if (pelota.getX() < 0) {
-            contador.sumarPuntos(2); // Gol para jugador 2
-            reiniciarPosiciones();
-        } else if (pelota.getX() + pelota.getRadio() * 2 > fondo.getWidth()) {
-            contador.sumarPuntos(1); // Gol para jugador 1
-            reiniciarPosiciones();
-        }
-    }
-
-    // Reinicia posiciones de pelota y paletas tras un gol
+    // Método para reiniciar posiciones tras un gol
     private void reiniciarPosiciones() {
-        pelota.setX((double)fondo.getWidth() / 2);
-        pelota.setX((double)fondo.getHeight() / 2);
+        pelota.setX((double) (fondo.getWidth() / 2));
+        pelota.setY((double) (fondo.getHeight() / 2));
         p1.setY(fondo.getHeight() / 2 - p1.getAlto() / 2);
         p2.setY(fondo.getHeight() / 2 - p2.getAlto() / 2);
     }
