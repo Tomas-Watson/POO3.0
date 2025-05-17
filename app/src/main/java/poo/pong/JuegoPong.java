@@ -1,4 +1,6 @@
 package poo.pong;
+import javax.swing.ImageIcon;
+
 import poo.Juego;
 
 public class JuegoPong extends Juego {
@@ -9,6 +11,7 @@ public class JuegoPong extends Juego {
         setDesarrolladores("Federico.R & Tomas.W");
         setDescripcion("Ping Pong en 2D");
         setImplementado(true);
+        setImgenPortada(new ImageIcon(this.getClass().getResource("ImagenesPong/PortadaPong.png")));
 
     }
 

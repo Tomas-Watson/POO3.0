@@ -1,11 +1,14 @@
 package poo;
 
+import javax.swing.ImageIcon;
+
 public abstract class Juego {
     private String nombre;
     private String desarrolladores;
     private String version;
     private String descripcion;
     private boolean implementado;
+    private ImageIcon imagenPortada;
 
     public void setNombre(String nombre){
         this.nombre=nombre;
@@ -45,6 +48,14 @@ public abstract class Juego {
 
     public boolean isImplementado(){
         return this.implementado;
+    }
+
+    public void setImgenPortada(ImageIcon imagenPortada){
+        this.imagenPortada = imagenPortada;
+    }
+
+    public ImageIcon getImagenPortada(){
+        return this.imagenPortada;
     }
 
     public abstract void run();
