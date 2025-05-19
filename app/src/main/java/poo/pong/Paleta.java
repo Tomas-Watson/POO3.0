@@ -1,9 +1,8 @@
 package poo.pong;
 
 import java.awt.Color;
-import java.awt.geom.Point2D;
 
-import org.example.ObjetoGrafico; //eventos
+import org.example.ObjetoGrafico;
 
 public class Paleta extends ObjetoGrafico{
     private int ancho= 10;
