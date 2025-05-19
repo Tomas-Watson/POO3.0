@@ -1,16 +1,13 @@
 package poo.lemmings;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.text.Position;
 
 import org.example.ObjetoGrafico;
 
 public class Terreno extends ObjetoGrafico {
     private boolean obstaculo;
     //Hay que hacer una clase relieve
-    private final List<Relieve> relieves;
+    private final List<Relieve> relieves = null;
 
    public Terreno(String filename) {
         super(filename);
