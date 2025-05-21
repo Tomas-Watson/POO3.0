@@ -5,22 +5,30 @@ import java.awt.*;
 
 import com.entropyinteractive.JGame;
 
-public class JuegoLemmings extends JGame {
+public class Lemmings extends JGame {
    
-
+    public final static int HEIGHT = 600;
+    public final static int WIDTH = 800;
     private boolean enPausa = false;
     private boolean finJuego = false;
     private boolean pPresionado = false;
     private boolean enterPresionado = false;
     
-    public JuegoLemmings(){
-        super("Pong", 800, 600);
+    public static void main(String[] args) {
+        Lemmings game = new Lemmings();
+        game.run(1.0 / 60.0);
+        System.exit(0);
+    }
+
+    public Lemmings() {
+        
+        super("Lemmings ", WIDTH, HEIGHT);
+
     }
 
     @Override
-    public void gameDraw(Graphics2D arg0) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'gameDraw'");
+    public void gameDraw(Graphics2D g) {
+        
     }
 
     @Override

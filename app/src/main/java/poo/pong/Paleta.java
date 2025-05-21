@@ -1,7 +1,9 @@
 package poo.pong;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImageFilter;
 
 import org.example.ObjetoGrafico; //eventos
 
@@ -44,6 +46,15 @@ public class Paleta extends ObjetoGrafico{
 
     public int getAncho(){
         return ancho;
+    }
+
+
+
+    public void draw(Graphics2D g) {
+        Graphics2D g2d = this.imagen.createGraphics();
+        g2d.setColor(color);
+        g2d.fillRect(0, 0, ancho, alto);
+        g2d.dispose();
     }
 
 

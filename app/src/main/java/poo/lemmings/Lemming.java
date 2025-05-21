@@ -1,6 +1,11 @@
 package poo.lemmings;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.example.ObjetoGrafico;
 import org.example.ObjetoGraficoMovible;
@@ -10,18 +15,35 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible{
     private boolean vida;
     private double velocidad;          
     private int direccion = 1; 
-    // +1 = derecha, -1 = izquierda        
-
+    // +1 = derecha, -1 = izquierda
+    
+    //Para la imagen del personaje
+    private BufferedImage spriteSheet;
+    private BufferedImage[] walkLemming;
+    private int currentFrame = 0;
+    private int x = 0;  // Posición horizontal del Lemming
+    private int frameWidth = 10, frameHeight = 10;  // Tamaño aproximado de cada fotograma
 
     private Habilidad habilidadActual;
 
  
-    public Lemming(String spriteFilename, double x, double y, double velocidad) {
-        super(spriteFilename);
-        setPosition((int)x, (int)y);
-        this.velocidad = velocidad;
+    public Lemming(String Filename, double velocidad) {
+        super(Filename);
         this.vida = true;
-        this.habilidadActual = null;  
+        this.velocidad = velocidad;
+        try {
+            // Cargo la hoja de sprites 
+            spriteSheet = ImageIO.read(new File("Amiga Amiga CD32 - Lemmings - Lemming.png"));
+            // Calculo el nro de frames en la primera fila
+            int cols = spriteSheet.getWidth() / frameWidth;
+            walkLemming = new BufferedImage[cols];
+            // Extraer cada frame de la primera fila de la imagen
+            for (int i = 0; i < cols; i++) {
+                walkLemming[i] = spriteSheet.getSubimage(i * frameWidth, 0, frameWidth, frameHeight);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     //Asigna una nueva habilidad al lemming 

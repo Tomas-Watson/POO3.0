@@ -38,8 +38,8 @@ public class Pong extends JGame{
     @Override
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
-        //fondo = new Fondo() adentro del Fondo hay que poner el nombre de la imagen
-        fondo = new Fondo("app.src.main.resources.imagenes.background.png");
+      
+        fondo = new Fondo("app/src/main/resources/imagenes/Fondo_black.png");
         p1 = new Paleta(p1Color, 50, 250);
         p2 = new Paleta(p2Color, 50,250);
         contador = new Contador(0,0);
@@ -51,8 +51,8 @@ public class Pong extends JGame{
         // dibujar el fondo
         fondo.display(g);
         //dibujar raquetas
-        p1.display(g);
-        p2.display(g);
+        p1.draw(g);
+        p2.draw(g);
         //dibujar pelota
         if(!finJuego){
             g.setColor(Color.WHITE);
