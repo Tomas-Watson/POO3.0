@@ -67,7 +67,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible{
 
         
         if (habilidadActual != null) {
-            habilidadActual.activar();
+            habilidadActual.activar(null);
         }
 
         
@@ -105,6 +105,10 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible{
 
     public boolean estaVivo() {
         return vida;
+    }
+
+    public void display (Graphics2D g){
+        
     }
         
 }
