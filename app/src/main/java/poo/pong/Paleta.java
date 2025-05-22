@@ -1,26 +1,24 @@
 package poo.pong;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImageFilter;
 
-import org.example.ObjetoGrafico; //eventos
+import org.example.ObjetoGrafico;
 
 public class Paleta extends ObjetoGrafico{
-    private int ancho= 10;
-    private int alto= 100;
-    private Color color;
+    private int ancho= 20;
+    private int alto= 110;
 
-    
-
-    public Paleta(Color color, double x, double y){
-        super(x, y); // Call the appropriate ObjetoGrafico constructor
-        this.color = color;
-       
+    public Paleta(int x, int y){
+        super(x, y);
+        setX(x);
+        setY(y);
+        System.out.println("Creo paleta 1 ");
     }
 
-   
+    public void display(Graphics2D g){
+        g.setColor(color.RED);
+        g.fillRect((int)getX(),(int)getY() ,getAncho(), getAlto());
+    }
 
     public void setX(double x){
         this.positionX=x;
@@ -47,15 +45,4 @@ public class Paleta extends ObjetoGrafico{
     public int getAncho(){
         return ancho;
     }
-
-
-
-    public void draw(Graphics2D g) {
-        Graphics2D g2d = this.imagen.createGraphics();
-        g2d.setColor(color);
-        g2d.fillRect(0, 0, ancho, alto);
-        g2d.dispose();
-    }
-
-
 }
