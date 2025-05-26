@@ -14,6 +14,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
 
     private boolean vida;
     private double velocidad;
+    private double velocidadY = 10; // velocidad vertical, puede ser usada para saltos o caídas
     private int direccion = 1; // +1 = derecha, -1 = izquierda
 
     private BufferedImage spriteSheet;
@@ -64,6 +65,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
 
     @Override
     public void moverse(double delta) {
+
         x += velocidad * direccion * delta;
 
         // Actualizar animación
@@ -112,8 +114,33 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
     public void girar() {
         direccion *= -1;
     }
+    public int getDireccion(){
+        return direccion;
+    }
 
     public boolean estaVivo() {
         return vida;
     }
+
+    public boolean estaEnSuelo(Terreno terreno) {
+        // Chequea justo debajo del Lemming (puedes ajustar el +frameHeight según tu sprite)
+        int px = (int) x + frameWidth / 2;
+        int py = (int) y + frameHeight;
+        return terreno.esSolido(px, py);
+    }
+
+    public double getVelocidadY() {
+       return velocidadY;//valor final
+    }
+
+    public void setVelocidadY(double d) {
+        velocidadY= d;
+    }
+
+    public void setY(double d) {
+        this.y = d;
+    }
+
+   
+    
 }

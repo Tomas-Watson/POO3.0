@@ -67,6 +67,36 @@ public class Terreno extends ObjetoGrafico {
         g.drawImage(terrenoImg, 0, 0, null);
     }
 
+    public void destruirExplosion(int x, int y, int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'destruirExplosion'");
+    }
+
+    public void destruirEn(int x, int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'destruirEn'");
+    }
+
+    public void construirEscalon(double d) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'construirEscalon'");
+    }
+
+    public boolean esPared(int i, int y) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'esPared'");
+    }
+
+    public void marcarObstaculo(int x, int y) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'marcarObstaculo'");
+    }
+
+    public boolean esSolido(int px, int py) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'esSolido'");
+    }
+
     /*@Override
     public void draw(GraphicsContext gc) {
         // Dibuja base del terreno
