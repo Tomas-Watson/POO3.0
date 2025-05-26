@@ -18,7 +18,7 @@ public class ObjetoGrafico extends Rectangle{
 	protected int alto = 0;
     
 	
-	public ObjetoGrafico(String filename,int posX, int posY) {
+	public ObjetoGrafico(String filename) {
     	try {
 			imagen= ImageIO.read(getClass().getClassLoader().getResourceAsStream(filename));
 			

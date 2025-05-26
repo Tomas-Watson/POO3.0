@@ -14,22 +14,21 @@ import org.example.ObjetoGrafico;
 
 public class Terreno extends ObjetoGrafico {
     private BufferedImage terrenoImg; // Imagen editable del terreno
-    private boolean obstaculo;
+    
     //Hay que hacer una clase relieve
     private final List<Relieve> relieves;
 
+    private boolean obstaculo;
+
    public Terreno(String filename) {
-        super(filename);
+        super(filename); // Llama explícitamente al constructor por defecto de ObjetoGrafico o reemplaza con los parámetros requeridos
+        BufferedImage mapa = null;
         try {
-            BufferedImage mapa = ImageIO.read(new File(filename));
-            // Asegura canal alfa para poder borrar píxeles
-            terrenoImg = new BufferedImage(mapa.getWidth(), mapa.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = terrenoImg.createGraphics();
-            g.drawImage(mapa, 0, 0, null);
-            g.dispose();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            mapa = ImageIO.read(new File("nivel.png"));
+        }  catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
     /**
