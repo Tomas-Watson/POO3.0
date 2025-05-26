@@ -3,14 +3,20 @@ package poo.Lanzador;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
+import poo.lemmings.Lemmings;
 import poo.pong.Pong;
 
-public class SistemaJuegos implements ActionListener {
+public class SistemaJuegos extends JPanel implements ActionListener {
     Pong juego;
+    Lemmings juego2;
     Thread t;
     public SistemaJuegos(){
         int filas = 0;
@@ -30,6 +36,11 @@ public class SistemaJuegos implements ActionListener {
         }
     }
 
+    private void add(JButton boton) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'add'");
+    }
+
     private void setLayout(GridLayout gridLayout) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setLayout'");
@@ -46,6 +57,14 @@ public class SistemaJuegos implements ActionListener {
 			};
 
 			t.start();
+        } else if (e.getActionCommand().equals("Lemmings")){
+            juego2 = new Lemmings();
+
+            t = new Thread() {
+			    public void run() {
+					juego2.run(1.0 / 60.0);
+				}
+			};
         }
     }
 
