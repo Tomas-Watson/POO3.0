@@ -57,7 +57,7 @@ public class Entrada extends ObjetoGrafico {
     }
 
     public Lemming CrearLemming() {
-        Lemming nuevo = new Lemming("imagenes/Lemmings_Puertas_Personajes",100.0);
+        Lemming nuevo = new Lemming();
         return nuevo;
     }
 
