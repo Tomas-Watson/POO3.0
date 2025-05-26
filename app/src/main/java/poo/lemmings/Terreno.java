@@ -64,7 +64,7 @@ public class Terreno extends ObjetoGrafico {
 
     // Dibuja el terreno en pantalla
     @Override
-    public void display(Graphics2D g) {
+    public void draw(Graphics2D g) {
         g.drawImage(terrenoImg, 0, 0, null);
     }
 
