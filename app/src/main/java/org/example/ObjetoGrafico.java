@@ -21,7 +21,7 @@ public class ObjetoGrafico extends Rectangle{
 	public ObjetoGrafico(String filename,int posX, int posY) {
     	try {
 			imagen= ImageIO.read(getClass().getClassLoader().getResourceAsStream(filename));
-
+			
 		} catch (IOException e) {
 			System.out.println("ZAS! en ObjectoGrafico "+e);
 		}
