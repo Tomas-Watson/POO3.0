@@ -22,13 +22,14 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible{
     private BufferedImage[] walkLemming;
     private int currentFrame = 0;
     private int x = 0;  // Posición horizontal del Lemming
+
     private int frameWidth = 10, frameHeight = 10;  // Tamaño aproximado de cada fotograma
 
     private Habilidad habilidadActual;
 
  
     public Lemming(String Filename, double velocidad) {
-        super(Filename);
+        super(Filename, 0,0);
         this.vida = true;
         this.velocidad = velocidad;
         try {
@@ -90,12 +91,12 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible{
 
     /** Dibuja el lemming y opcionalmente info de debug */
     @Override
-    public void display(Graphics2D g2) {
-        super.display(g2);
+    public void draw(Graphics2D g2) {
+        super.draw(g2);
 
         // Ejemplo: dibujar la vida restante sobre el sprite
         g2.setColor(java.awt.Color.YELLOW);
-        g2.drawString("♥ " + vida, (int)getX(), (int)getY() - 5);
+        g2.drawString("♥" + vida, (int)getX(), (int)getY() - 5);
     }
 
     /** Cambia de dirección (cuando choca con un muro, por ejemplo) */
@@ -105,10 +106,6 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible{
 
     public boolean estaVivo() {
         return vida;
-    }
-
-    public void display (Graphics2D g){
-        
     }
         
 }
