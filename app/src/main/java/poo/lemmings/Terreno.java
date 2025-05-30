@@ -12,8 +12,8 @@ public class Terreno extends ObjetoGrafico {
     private final int tamBaldosaOriginal = 16;
     private final int escala = 3;
     public final int baldosa = tamBaldosaOriginal * escala;
-    private final int maxScreenColumnas = 16;
-    private final int maxScreenFilas = 12;
+    public final int maxScreenColumnas = 16;
+    public final int maxScreenFilas = 12;
     private final int screenAncho = baldosa * maxScreenColumnas;
     private final int screenAlto = baldosa * maxScreenFilas;
     private int[][] mapNivel;
@@ -63,12 +63,36 @@ public class Terreno extends ObjetoGrafico {
 
         // Verificamos que esté dentro de los límites del mapa
         if (col < 0 || col >= maxScreenColumnas || fila < 0 || fila >= maxScreenFilas) {
-            return false; // Fuera del mapa, consideramos que no es sólido
+            return false; 
         }
 
         int tipoPixel = mapNivel[col][fila];
         Pixel pixel = pixeles[tipoPixel];
-        // Suponemos que Pixel tiene un método esSolido()
         return pixel != null && pixel.esSolido();
+    }
+
+    public void destruirExplosion(int x, int y, int r) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'destruirExplosion'");
+    }
+
+    public void destruirEn(int x, int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'destruirEn'");
+    }
+
+    public void construirEscalon(double d) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'construirEscalon'");
+    }
+
+    public void marcarObstaculo(int x, int y) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'marcarObstaculo'");
+    }
+
+    public boolean esPared(int i, int y) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'esPared'");
     }
 }

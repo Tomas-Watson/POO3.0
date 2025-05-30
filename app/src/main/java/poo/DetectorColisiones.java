@@ -2,6 +2,8 @@ package poo;
 
 import java.awt.Rectangle;
 
+import poo.lemmings.Lemming;
+import poo.lemmings.Terreno;
 import poo.pong.Paleta;
 import poo.pong.Pelota;
 
@@ -43,7 +45,43 @@ public class DetectorColisiones extends Rectangle {
                 return band;
         }
         
-        // Metodos de colisiones del juego Lemmings
+        //---------------------------------- Metodos de colisiones del juego Lemmings-------------------------------
+
+        public static boolean colisionParedes(Terreno terreno, Lemming lemming) {
+                // Verifica si el lemming está en una posición donde hay un terreno sólido
+                int col = (int)(lemming.getX() / terreno.baldosa);
+                int fila = (int)(lemming.getY() / terreno.baldosa);
+                
+                if (col < 0 || col >= terreno.maxScreenColumnas || fila < 0 || fila >= terreno.maxScreenFilas) {
+                    return false; // Fuera de los límites del mapa
+                }
+                
+                return terreno.esSolido(col, fila);
+        }
+
+        public static void ColisionSuelo(Terreno terreno, Lemming lemming) {
+                int col = (int)(lemming.getX() / terreno.baldosa);
+                int fila = (int)((lemming.getY() + lemming.getY()) / terreno.baldosa);
+
+                if (col < 0 || col >= terreno.maxScreenColumnas || fila < 0 || fila >= terreno.maxScreenFilas) {
+                    return; // Fuera de los límites del mapa
+                }
+
+                if (terreno.esSolido(col, fila)) {
+                    // Calcular bloques caídos
+                    if (lemming.getYInicioCaida() != -1) {
+                        int bloquesCaidos = (int)((lemming.getY() - lemming.getYInicioCaida()) / terreno.baldosa);
+                        if (bloquesCaidos > 5) {
+                            lemming.morir();
+                        }
+                    }
+                    lemming.setVelocidadY(0); // Detiene la caída
+                    lemming.setY(fila * terreno.baldosa - lemming.getY()); // Ajusta la posición al suelo
+                    lemming.aterrizar(); // Resetea la altura de caída
+                } else {
+                    lemming.iniciarCaida(); // Marca el inicio de la caída si está en el aire
+                }
+        }
         // Colisiones 1Er nivel
        
         // Colisiones 2Do nivel
