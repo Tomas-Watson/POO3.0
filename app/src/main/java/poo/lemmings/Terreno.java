@@ -1,122 +1,74 @@
 package poo.lemmings;
 
-import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.imageio.ImageIO;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.example.ObjetoGrafico;
 
 public class Terreno extends ObjetoGrafico {
-    private BufferedImage terrenoImg; // Imagen editable del terreno
-    
-    //Hay que hacer una clase relieve
-    private final List<Relieve> relieves;
+    private final int tamBaldosaOriginal = 16;
+    private final int escala = 3;
+    public final int baldosa = tamBaldosaOriginal * escala;
+    private final int maxScreenColumnas = 16;
+    private final int maxScreenFilas = 12;
+    private final int screenAncho = baldosa * maxScreenColumnas;
+    private final int screenAlto = baldosa * maxScreenFilas;
+    private int[][] mapNivel;
+    private Pixel[] pixeles; // Array de tipos de Pixel
 
-    private boolean obstaculo;
+    public Terreno(Pixel[] pixeles) {
+        super(0, 0);
+        this.pixeles = pixeles; // Recibe el array de tipos de Pixel
+        mapNivel = new int[maxScreenColumnas][maxScreenFilas];
+    }
 
-   public Terreno(String filename) {
-        super(filename); // Llama explícitamente al constructor por defecto de ObjetoGrafico o reemplaza con los parámetros requeridos
-        BufferedImage mapa = null;
+    public void CargarTerreno(String filename) {
         try {
-            mapa = ImageIO.read(new File("nivel.png"));
-        }  catch (IOException e) {
+            InputStream is = getClass().getResourceAsStream(filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            for (int col = 0; col < maxScreenColumnas; col++) {
+                String linea = reader.readLine();
+                String[] numeros = linea.split(" ");
+                for (int fila = 0; fila < maxScreenFilas; fila++) {
+                    int nro = Integer.parseInt(numeros[fila]);
+                    mapNivel[col][fila] = nro;
+                }
+            }
+            reader.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    /**
-     * Marca el terreno como destruido (sin obstáculo).
-     */
-    public void destruccion() {
-        this.obstaculo = false;
-        this.relieves.clear();
-        
-    }
-
-    // Agrega un relieve (detalle visual) al terreno.
-    public void agregarRelieve(Relieve relieve) {
-        this.relieves.add(relieve);
-        
-    }
-
-    /* Quita un relieve del terreno.
-     */
-    public void sacarRelieve(Relieve relieve) {
-        this.relieves.remove(relieve);
-      
-    }
-
-    // Método para excavar un círculo en el terreno (por ejemplo, cuando un Lemming excava)
-    public void excavar(int cx, int cy, int radio) {
-        Graphics2D g2 = terrenoImg.createGraphics();
-        g2.setComposite(AlphaComposite.Clear); // Modo borrador
-        g2.fillOval(cx - radio, cy - radio, radio * 2, radio * 2);
-        g2.dispose();
-    }
-
-    // Dibuja el terreno en pantalla
     @Override
-    public void draw(Graphics2D g) {
-        g.drawImage(terrenoImg, 0, 0, null);
-    }
-
-    public void destruirExplosion(int x, int y, int i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'destruirExplosion'");
-    }
-
-    public void destruirEn(int x, int i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'destruirEn'");
-    }
-
-    public void construirEscalon(double d) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'construirEscalon'");
-    }
-
-    public boolean esPared(int i, int y) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'esPared'");
-    }
-
-    public void marcarObstaculo(int x, int y) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'marcarObstaculo'");
+    public void draw(Graphics2D g2) {
+        for (int col = 0; col < maxScreenColumnas; col++) {
+            for (int fila = 0; fila < maxScreenFilas; fila++) {
+                int tipoPixel = mapNivel[col][fila];
+                Pixel pixel = pixeles[tipoPixel];
+                if (pixel != null && pixel.getImage() != null) {
+                    g2.drawImage((java.awt.Image) pixel.getImage(), col * baldosa, fila * baldosa, baldosa, baldosa, null);
+                }
+            }
+        }
     }
 
     public boolean esSolido(int px, int py) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'esSolido'");
-    }
+        // Convertimos coordenadas de píxel a columna y fila de baldosa
+        int col = px / baldosa;
+        int fila = py / baldosa;
 
-    /*@Override
-    public void draw(GraphicsContext gc) {
-        // Dibuja base del terreno
-        super.draw(gc);
-        // Si es obstáculo, pinta zona bloqueada
-        if (obstaculo) {
-            gc.fillRect(getX(), getY(), getWidth(), getHeight());
+        // Verificamos que esté dentro de los límites del mapa
+        if (col < 0 || col >= maxScreenColumnas || fila < 0 || fila >= maxScreenFilas) {
+            return false; // Fuera del mapa, consideramos que no es sólido
         }
-        // Dibuja cada relieve encima
-        for (Relieve r : relieves) {
-            r.draw(gc);
-        }
-    }
 
-    private void actualizarGrafico() {
-        // Recarga o invalida el sprite/textura para refrescar la vista
-        // implementación dependiente de ObjetoGrafico
+        int tipoPixel = mapNivel[col][fila];
+        Pixel pixel = pixeles[tipoPixel];
+        // Suponemos que Pixel tiene un método esSolido()
+        return pixel != null && pixel.esSolido();
     }
-    
-    ESTOS METODOS VAN EN VLemmings*/
-
-    
 }
