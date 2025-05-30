@@ -33,7 +33,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
     private double yInicioCaida = -1;
 
     public Lemming(String filename, double velocidadInicial) {
-        super(filename, 0, 0); // posición inicial
+        super(0, 0); // posición inicial
         this.vida = true;
         this.velocidad = velocidadInicial;
         this.x = 0;
@@ -79,7 +79,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
 
         // Activar habilidad si existe
         if (habilidadActual != null) {
-            habilidadActual.activar(null);
+            //habilidadActual.activar(null);
         }
 
         // Chequear vida

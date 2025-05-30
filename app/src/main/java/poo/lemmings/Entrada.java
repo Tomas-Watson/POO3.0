@@ -13,7 +13,7 @@ public class Entrada extends ObjetoGrafico {
     protected BufferedImage spritePuertaEntrada;
     public Entrada() {
         //Posicion inicial 100 y 200 
-        super("imagenes/Lemmings_Puerta_Decoraciones",100,200);
+        super(100,200);
 
         try{
             //De esta manera extraigo los sprites desde los recursos

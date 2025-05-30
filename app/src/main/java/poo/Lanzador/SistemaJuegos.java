@@ -18,6 +18,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
     Pong juego;
     Lemmings juego2;
     Thread t;
+    Thread t1;
     public SistemaJuegos(){
         int filas = 0;
         int columnas = 1;
@@ -60,11 +61,13 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         } else if (e.getActionCommand().equals("Lemmings")){
             juego2 = new Lemmings();
 
-            t = new Thread() {
+            t1 = new Thread() {
 			    public void run() {
 					juego2.run(1.0 / 60.0);
 				}
 			};
+
+            t1.start();
         }
     }
 

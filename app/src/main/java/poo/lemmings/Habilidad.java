@@ -60,7 +60,7 @@ public class Habilidad {
                 suicidar();
                 break;
             case BASHER:
-                terreno.minerAdelante((int)(lemming.getX(),(int)(lemming.getY()),lemming.getDireccion());
+                //terreno.minerAdelante(int)(lemming.getX(),(int)(lemming.getY()),lemming.getDireccion());
                 break;
             default:
             

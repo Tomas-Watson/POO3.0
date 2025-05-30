@@ -16,7 +16,8 @@ public class ObjetoGrafico extends Rectangle{
 	protected Color color = Color.WHITE;
 	protected int ancho = 0;
 	protected int alto = 0;
-    
+    double posY;
+	double posX;
 	
 	public ObjetoGrafico(String filename) {
     	try {
@@ -25,7 +26,9 @@ public class ObjetoGrafico extends Rectangle{
 		} catch (IOException e) {
 			System.out.println("ZAS! en ObjectoGrafico "+e);
 		}
+		
 		this.positionX=posX;
+		
 		this.positionY=posY;
     }
 
