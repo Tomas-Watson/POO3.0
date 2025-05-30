@@ -15,7 +15,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
     private boolean vida;
     private double velocidad;
     private double velocidadY = 10; // velocidad vertical, puede ser usada para saltos o caídas
-    private int direccion = 1; // +1 = derecha, -1 = izquierda
+    private int direccion = 1; // +1 = derecha, -1 = izquierda, 0=parado
 
     private BufferedImage spriteSheet;
     private BufferedImage[] walkLemming;
@@ -29,6 +29,8 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
     private double x, y;
 
     private Habilidad habilidadActual;
+
+    private double yInicioCaida = -1;
 
     public Lemming(String filename, double velocidadInicial) {
         super(filename, 0, 0); // posición inicial
@@ -141,6 +143,18 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
         this.y = d;
     }
 
-   
-    
+    public void iniciarCaida() {
+        if (yInicioCaida == -1) {
+            yInicioCaida = this.getY();
+        }
+    }
+
+    public void aterrizar() {
+        yInicioCaida = -1;
+    }
+
+    public double getYInicioCaida() {
+        return yInicioCaida;
+    }
+
 }
