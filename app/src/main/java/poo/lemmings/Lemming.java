@@ -15,7 +15,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
     private boolean vida;
     private double velocidad;
     private double velocidadY = 10; // velocidad vertical, puede ser usada para saltos o caídas
-    private int direccion = 1; // +1 = derecha, -1 = izquierda
+    private int direccion = 1; // +1 = derecha, -1 = izquierda, 0=parado
 
     private BufferedImage spriteSheet;
     private BufferedImage[] walkLemming;

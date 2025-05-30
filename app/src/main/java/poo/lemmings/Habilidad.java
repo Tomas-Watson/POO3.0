@@ -2,7 +2,7 @@ package poo.lemmings;
 
 public class Habilidad {
     public enum Tipo {
-        MINER, BUILDER, FLOATER, BLOCKER, CLIMBER, BOMBER
+        MINER, BUILDER, FLOATER, BLOCKER, CLIMBER, BOMBER, BASHER
     }
 
     private final Tipo tipo;
@@ -18,8 +18,7 @@ public class Habilidad {
    
     public void suicidar() {
         if (tipo == Tipo.BOMBER) {
-            // lógica de explosión, por ejemplo:
-            terreno.destruirExplosion((int)lemming.getX(), (int)lemming.getY(), 20); //ULTIMO VALOR ES EL RADIO
+            terreno.destruirExplosion((int)lemming.getX(), (int)lemming.getY()); //ULTIMO VALOR ES EL RADIO
         }
        
     }
@@ -29,16 +28,12 @@ public class Habilidad {
         switch (tipo) {
             case MINER:
                 // excavar un túnel bajo los pies
-                terreno.destruirEn(
-                    (int)lemming.getX(), 
-                    (int)(lemming.getY() + lemming.getY())
-                );
+                terreno.miner((int)lemming.getX(), (int)(lemming.getY()));
                 break;
 
             case BUILDER:
                 // construir escalones delante
-                terreno.construirEscalon(
-                    (int)lemming.getX() + lemming.getDireccion()*lemming.getY());
+                terreno.construirEscalon((int)lemming.getX(),(int) lemming.getY(), lemming.getDireccion());
                 break;
 
             case FLOATER:
@@ -51,18 +46,12 @@ public class Habilidad {
             case BLOCKER:
                 // al activarse, invierte dirección y marca obstáculo
                 lemming.girar();
-                terreno.marcarObstaculo(
-                    (int)lemming.getX(), 
-                    (int)lemming.getY()
-                );
+                terreno.pararse((int)lemming.getX(), (int)lemming.getY() );
                 break;
 
             case CLIMBER:
                 // permitir trepar paredes: si frente hay pared, subir
-                if (terreno.esPared(
-                    (int)(lemming.getX() + lemming.getDireccion()), 
-                    (int)lemming.getY()
-                )) {
+                if (terreno.esPared((int)(lemming.getX() + lemming.getDireccion()),(int)lemming.getY())) {
                     lemming.setY(lemming.getY() - 1);
                 }
                 break;
@@ -70,6 +59,11 @@ public class Habilidad {
             case BOMBER:
                 suicidar();
                 break;
+            case BASHER:
+                terreno.minerAdelante((int)(lemming.getX(),(int)(lemming.getY()),lemming.getDireccion());
+                break;
+            default:
+            
         }
     }
 }

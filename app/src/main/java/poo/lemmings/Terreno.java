@@ -19,6 +19,8 @@ public class Terreno extends ObjetoGrafico {
     private int[][] mapNivel;
     private Pixel[] pixeles; // Array de tipos de Pixel
 
+    private final int r =20; //para explosiones
+
     public Terreno(Pixel[] pixeles) {
         super(0, 0);
         this.pixeles = pixeles; // Recibe el array de tipos de Pixel
@@ -71,28 +73,120 @@ public class Terreno extends ObjetoGrafico {
         return pixel != null && pixel.esSolido();
     }
 
-    public void destruirExplosion(int x, int y, int r) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'destruirExplosion'");
+    public void destruirExplosion(int x, int y) {
+        int radioCuadrado = r * r;
+        for (int col = 0; col < maxScreenColumnas; col++) {
+            for (int fila = 0; fila < maxScreenFilas; fila++) {
+                // Centro de la baldosa
+                int centroX = col * baldosa + baldosa / 2;
+                int centroY = fila * baldosa + baldosa / 2;
+                int dx = centroX - x;
+                int dy = centroY - y;
+                if (dx * dx + dy * dy <= radioCuadrado) {
+                    // Cambia el tipo de pixel a "aire" (por ejemplo, tipo 0)
+                    mapNivel[col][fila] = 0;
+                }
+            }
+        }
     }
 
-    public void destruirEn(int x, int i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'destruirEn'");
+    public void minerAdelante(int x, int y, int direccion)  {
+        int col = x / baldosa;
+        int fila = y / baldosa;
+
+        // El miner destruye bloques en la fila actual hacia la dirección indicada
+        // dirección: 1 = derecha, -1 = izquierda
+        int nextCol = col + direccion;
+
+        // Verifica límites del mapa
+        while (nextCol >= 0 && nextCol < maxScreenColumnas) {
+            // Si el siguiente bloque es aire, termina de minar
+            if (mapNivel[nextCol][fila] == 0) {
+            break;
+            }
+
+            // Destruye el bloque (lo convierte en aire)
+            mapNivel[nextCol][fila] = 0;
+
+            // Avanza en la dirección indicada
+            nextCol += direccion;
+        }
     }
 
-    public void construirEscalon(double d) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'construirEscalon'");
+    public void miner(int x, int y)  {
+        int col = x / baldosa;
+        int fila = y / baldosa;
+
+        // El miner destruye hacia abajo en la misma columna
+        while (fila + 1 < maxScreenFilas) {
+            int nextFila = fila + 1;
+
+            // Si el siguiente bloque es aire, termina de minar
+            if (mapNivel[col][nextFila] == 0) {
+                break;
+            }
+
+            // Destruye el bloque (lo convierte en aire)
+            mapNivel[col][nextFila] = 0;
+
+            // Avanza hacia abajo
+            fila = nextFila;
+        }
     }
 
-    public void marcarObstaculo(int x, int y) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'marcarObstaculo'");
+    public boolean construirEscalon(int x, int y, int direccion) {
+        // dirección: 1 = derecha, -1 = izquierda
+        // Calcula la posición del nuevo escalón (un poco arriba y adelante del lemming)
+        int col = (x / baldosa) + direccion;
+        int fila = (y / baldosa) - 1; // Un bloque arriba del lemming
+
+        // Verifica límites del mapa
+        if (col < 0 || col >= maxScreenColumnas || fila < 0 || fila >= maxScreenFilas) {
+            return false; // No se puede construir fuera del mapa
+        }
+
+        // Si ya hay un bloque sólido, no se puede construir (pared o techo)
+        int tipoPixel = mapNivel[col][fila];
+        Pixel pixel = pixeles[tipoPixel];
+        if (pixel != null && pixel.esSolido()) {
+            return false; // Hay pared o techo, no se puede construir
+        }
+
+        // Construye el escalón (2 es escalón)
+        mapNivel[col][fila] = 2;
+        return true; // Construcción exitosa
     }
 
-    public boolean esPared(int i, int y) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'esPared'");
+    public void pararse(int x, int y) {
+        // Convierte la posición de píxel a columna y fila de baldosa
+        int col = x / baldosa;
+        int fila = y / baldosa;
+
+        // Verifica límites del mapa
+        if (col < 0 || col >= maxScreenColumnas || fila < 0 || fila >= maxScreenFilas) {
+            return;
+        }
+
+        // Cambia el tipo de pixel a uno especial de "pared temporal" (por ejemplo, tipo 3)
+        mapNivel[col][fila] = 3; // Asegúrate que pixeles[3] sea sólido y tenga imagen de pared o invisible
+    }
+
+    public boolean esPared(int x, int y) {
+        int col = x / baldosa;
+        int fila = y / baldosa;
+
+        // Verifica límites del mapa
+        if (col < 0 || col >= maxScreenColumnas || fila <= 0 || fila >= maxScreenFilas) {
+            return false;
+        }
+
+        // Chequea si hay bloque sólido en la posición actual y justo encima
+        int tipoPixelActual = mapNivel[col][fila];
+        int tipoPixelArriba = mapNivel[col][fila - 1];
+        Pixel pixelActual = pixeles[tipoPixelActual];
+        Pixel pixelArriba = pixeles[tipoPixelArriba];
+
+        return (pixelActual != null && pixelActual.esSolido()) &&
+               (pixelArriba != null && pixelArriba.esSolido());
     }
 }
