@@ -1,97 +1,57 @@
 package poo.lemmings;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Date;
 
-import javax.imageio.ImageIO;
+import java.awt.*;
 
 import com.entropyinteractive.JGame;
-import com.entropyinteractive.Keyboard;
-import com.entropyinteractive.Log;
-import com.entropyinteractive.Mouse;
 
-public class Lemmings extends JGame{
-
-    //atributos del tipo date
-    Date dInit = new Date();
-    Date dAhora;
-
-    //atributos del tipo int 
-    private final static int ANCHO_PANTALLA = 800;
-    private final static int ALTO_PANTALLA = 600;
-
-    //Atributos del tipo 
-    private final boolean finJuego = false;
+public class Lemmings extends JGame {
+   
+    public final static int HEIGHT = 600;
+    public final static int WIDTH = 800;
+    private static final Object Lemming = null;
     private boolean enPausa = false;
+    private boolean finJuego = false;
     private boolean pPresionado = false;
-
-    //Atributos de otras clase 
-    private Terreno terreno;
+    private boolean enterPresionado = false;
     
-    //Atributos del tipo imagen
-    private BufferedImage imgFondo = null;
+    public static void main(String[] args) {
+        Lemmings game = new Lemmings();
+        game.run(1.0 / 60.0);
+        System.exit(0);
+    }
 
     public Lemmings() {
-        super("Lemmings",ANCHO_PANTALLA,ALTO_PANTALLA);
+        
+        super("Lemmings ", WIDTH, HEIGHT);
+
     }
 
     @Override
     public void gameDraw(Graphics2D g) {
-
-        //Dibujar el fondo del juego
-        g.setColor(Color.BLUE);
-        g.fillRect(0,0,ANCHO_PANTALLA,ALTO_PANTALLA);
-
-        g.drawImage(imgFondo,320,240,null);
-        g.setColor(Color.red);
-        g.drawString("Hola",320,240);
-    }
-
-    @Override
-    public void gameStartup() {
-
-        Log.info(getClass().getSimpleName(), "Ejecutando el juego");
-        //terreno = new Terreno(50,50);
-        //terreno.cargarImagen("Imagenes_Lemmings/grass01.png");
-        try {
-            imgFondo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("Imagenes_Lemmings/grass01.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void gameUpdate(double arg0) {
-        if(!finJuego){
-            Mouse mouse = this.getMouse();
-
-            Keyboard keyboard = this.getKeyboard();
-
-            // Pausar/reanudar el juego con 'P'
-            if (keyboard.isKeyPressed(KeyEvent.VK_P)) {
-                if (!pPresionado) {
-                    enPausa = !enPausa;
-                    pPresionado = true;
-                }
-            } else {
-                pPresionado = false;
-            }
-
-            if (keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)){
-                System.exit(0);
-            }
-
-
-            
-        }
+        
     }
 
     @Override
     public void gameShutdown() {
-        Log.info(getClass().getSimpleName(), "Shutting down game");
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'gameShutdown'");
     }
+
+    @Override
+    public void gameStartup() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'gameStartup'");
+    }
+
+    @Override
+    public void gameUpdate(double arg0) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'gameUpdate'");
+    }
+
+    public Object getLemming() {
+        return Lemming;
+    }
+    
 }
