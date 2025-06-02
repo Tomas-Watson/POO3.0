@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.imageio.ImageIO;
+
 import org.example.ObjetoGrafico;
 
 public class Terreno extends ObjetoGrafico {
@@ -42,6 +44,29 @@ public class Terreno extends ObjetoGrafico {
             reader.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void getImg(){
+        //completar innicializando los numeros con imagenes
+        try {
+           pixeles[0] = new Pixel();
+           pixeles[0].imagen = ImageIO.read(getClass().getResourceAsStream(" "));
+           pixeles[0].esSolido=false;
+            
+
+            pixeles[1] = new Pixel();
+            pixeles[1].imagen = ImageIO.read(getClass().getResourceAsStream("ImgLemming/tierra.png"));
+            pixeles[1].esSolido= true;
+            
+
+            pixeles[2] = new Pixel();
+            pixeles[2].imagen = ImageIO.read(getClass().getResourceAsStream("ImgLemming/tierraP.png"));
+            pixeles[2].esSolido=true;
+
+
+        } catch (Exception e) {
+            System.out.println("Hay error acaaa" + e);
         }
     }
 

@@ -7,18 +7,12 @@ public class Pixel {
     public BufferedImage imagen;
     public boolean esSolido; // true si el lemming no puede pasar
     public String tipo;
-
-    public Pixel(BufferedImage imagen, boolean esSolido, String tipo) {
-        this.imagen = imagen;
-        this.esSolido = esSolido;
-        this.tipo = tipo;
+    public boolean esSolido() {
+        return esSolido;
     }
-
-    public Image getImage() {
+    public Object getImage() {
         return imagen;
     }
 
-    public boolean esSolido() {
-        return this.esSolido;
-    }
+
 }
