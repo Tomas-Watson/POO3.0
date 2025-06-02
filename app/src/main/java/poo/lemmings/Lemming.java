@@ -157,4 +157,13 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
         return yInicioCaida;
     }
 
+    public void getPersonaje(){
+        try {
+            BufferedImage personaje = ImageIO.read(getClass().getResourceAsStream("ImgLemming/Personaje.png"));
+
+        } catch (Exception e) {
+            System.out.println("Hay error en PerLemmings" + e);
+        }
+    }
+
 }
