@@ -17,15 +17,17 @@ import poo.pong.Pong;
 public class SistemaJuegos extends JPanel implements ActionListener {
     Pong juego;
     Lemmings juego2;
+
     Thread t;
     Thread t1;
+
     public SistemaJuegos(){
         int filas = 0;
         int columnas = 1;
         int separacion = 10; 
 
         this.setLayout(new GridLayout(filas ,columnas,separacion,separacion));
-
+        setVisible(true);
         String[] arrEtiquetas = {"JuegoPong","Lemmings"};
 
         JButton boton;
@@ -34,17 +36,8 @@ public class SistemaJuegos extends JPanel implements ActionListener {
             boton=new JButton(etiqueta);
             boton.addActionListener(this);
             this.add(boton);
+            
         }
-    }
-
-    private void add(JButton boton) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
-    }
-
-    private void setLayout(GridLayout gridLayout) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setLayout'");
     }
 
     public void actionPerformed(ActionEvent e){
@@ -58,17 +51,14 @@ public class SistemaJuegos extends JPanel implements ActionListener {
 			};
 
 			t.start();
-        } else if (e.getActionCommand().equals("Lemmings")){
+        } 
+
+        if(e.getActionCommand().equals("Lemmings")){
             juego2 = new Lemmings();
-
-            t1 = new Thread() {
-			    public void run() {
-					juego2.run(1.0 / 60.0);
-				}
-			};
-
+            t1 = new Thread(() -> juego2.run(1.0 / 60.0));
             t1.start();
-        }
+        } 
+
     }
 
     public static void main(String...z){
@@ -84,7 +74,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         f.addWindowListener(l);
         f.pack();
         f.setVisible(true);
-	 	f.setLocationRelativeTo(null);
+	 	f.setLocationRelativeTo(null); // PAra que la pantalla este al medio cuando se inicie
 	}
-    
+
 }
