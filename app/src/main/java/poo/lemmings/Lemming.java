@@ -1,6 +1,7 @@
 package poo.lemmings;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -13,45 +14,32 @@ import org.example.ObjetoGraficoMovible;
 public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
 
     private boolean vida;
-    private double velocidad;
+    private  final double velocidad=10;
     private double velocidadY = 10; // velocidad vertical, puede ser usada para saltos o caídas
     private int direccion = 1; // +1 = derecha, -1 = izquierda, 0=parado
+    private int x, y;          // posición actual del lemming
+    private int ancho = 24;    // ancho en píxeles (ajusta según tu sprite)
+    private int alto  = 24;    // alto en píxeles (ajusta según tu sprite)
 
-    private BufferedImage spriteSheet;
-    private BufferedImage[] walkLemming;
-    private int currentFrame = 0;
-    private double frameTimer = 0;
-    private double frameDelay = 0.1; // segundos por frame
-
+    
     private int frameWidth = 10;
     private int frameHeight = 10;
 
-    private double x, y;
+    private Rectangle hitbox; 
+    private Terreno terreno;
 
     private Habilidad habilidadActual;
 
     private double yInicioCaida = -1;
 
-    public Lemming(String filename, double velocidadInicial) {
+    public Lemming(String filename) {
         super(0, 0); // posición inicial
         this.vida = true;
-        this.velocidad = velocidadInicial;
         this.x = 0;
         this.y = 0;
-
-        try {
-            spriteSheet = ImageIO.read(new File(filename));
-
-            int cols = spriteSheet.getWidth() / frameWidth;
-            walkLemming = new BufferedImage[cols];
-
-            for (int i = 0; i < cols; i++) {
-                walkLemming[i] = spriteSheet.getSubimage(i * frameWidth, 0, frameWidth, frameHeight);
-            }
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        this.habilidadActual = null; // no tiene habilidad al inicio
+        this.direccion = 1;
+        this.hitbox = new Rectangle(x, y, ancho, alto); // Inicializar hitbox
     }
 
     public void setHabilidad(Habilidad h) {
@@ -65,41 +53,49 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
         this.vida = false;
     }
 
-    @Override
+
+    public void setTerreno(Terreno terreno) {
+        this.terreno = terreno;
+    }
+
     public void moverse(double delta) {
+        if (!vida || terreno == null) return;
 
-        x += velocidad * direccion * delta;
-
-        // Actualizar animación
-        frameTimer += delta;
-        if (frameTimer >= frameDelay) {
-            frameTimer -= frameDelay;
-            currentFrame = (currentFrame + 1) % walkLemming.length;
+        // 1) Caída vertical
+        if (!terreno.esSolido(x, y + alto) && !terreno.esSolido(x + ancho - 1, y + alto)) {
+            y += velocidadY * delta;
+            hitbox.setLocation(x, y);
+            return;
         }
 
-        // Activar habilidad si existe
-        if (habilidadActual != null) {
-            //habilidadActual.activar(null);
-        }
+        // 2) Movimiento horizontal
+        int nextX = (int) (x + velocidad * direccion * delta);
+        hitbox.setLocation(nextX, y);
 
-        // Chequear vida
-        if (!vida) {
-            morir();
+        if (direccion > 0) {
+            int pxDerecha = nextX + ancho - 1;
+            if (terreno.esSolido(pxDerecha, y) || terreno.esSolido(pxDerecha, y + alto - 1)) {
+                girar();
+            } else {
+                x = nextX;
+            }
+        } else if (direccion < 0) {
+            int pxIzquierda = nextX;
+            if (terreno.esSolido(pxIzquierda, y) || terreno.esSolido(pxIzquierda, y + alto - 1)) {
+                girar();
+            } else {
+                x = nextX;
+            }
         }
+        hitbox.setLocation(x, y);
     }
 
     @Override
     public void draw(Graphics2D g2) {
-        BufferedImage frame = walkLemming[currentFrame];
-        int fw = frame.getWidth();
-        int fh = frame.getHeight();
-
-        if (direccion >= 0) {
-            // Normal (derecha)
-            g2.drawImage(frame, (int) x, (int) y, fw, fh, null);
-        } else {
-            // Reflejado horizontalmente (izquierda)
-            g2.drawImage(frame, (int) x + fw, (int) y, -fw, fh, null);
+        try {
+            BufferedImage paradoImg = ImageIO.read(getClass().getResourceAsStream("/imagenes/Lemming/Leming_Parado.png"));
+        } catch (Exception e) {
+            System.out.println("Error cargando imagen de Lemming parado: " + e);
         }
     }
 
@@ -140,7 +136,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
     }
 
     public void setY(double d) {
-        this.y = d;
+        this.y = (int) d;
     }
 
     public void iniciarCaida() {
@@ -165,5 +161,7 @@ public class Lemming extends ObjetoGrafico implements ObjetoGraficoMovible {
             System.out.println("Hay error en PerLemmings" + e);
         }
     }
+
+   
 
 }

@@ -17,7 +17,7 @@ public class Entrada extends ObjetoGrafico {
 
         try{
             //De esta manera extraigo los sprites desde los recursos
-            spriteSheet = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imagenes/Lemmings_Puertas_Decoraciones"));
+            spriteSheet = ImageIO.read(getClass().getClassLoader().getResourceAsStream("app\\src\\main\\resources\\imagenes\\Lemmings_Puertas_Decoraciones.png"));
 
             //Extraer un sprite especifico, en este caso una puerta para que salgan los lemmings
             //En vez de 86 y 450 puede ser 168 y 500 
