@@ -9,21 +9,14 @@ import javax.imageio.ImageIO;
 import org.example.ObjetoGrafico;
 
 public class Entrada extends ObjetoGrafico {
-    protected BufferedImage spriteSheet;
-    protected BufferedImage spritePuertaEntrada;
+    
+    private BufferedImage imagenEntrada;
     public Entrada() {
         //Posicion inicial 100 y 200 
-        super(100,200);
+        super(100,100);
 
         try{
-            //De esta manera extraigo los sprites desde los recursos
-            spriteSheet = ImageIO.read(getClass().getClassLoader().getResourceAsStream("app\\src\\main\\resources\\imagenes\\Lemmings_Puertas_Decoraciones.png"));
-
-            //Extraer un sprite especifico, en este caso una puerta para que salgan los lemmings
-            //En vez de 86 y 450 puede ser 168 y 500 
-            spritePuertaEntrada = spriteSheet.getSubimage(86, 450, 82, 50);
-
-
+            imagenEntrada = ImageIO.read(getClass().getResourceAsStream("/Imagenes_Lemmings/Entrada.png"));
         }catch (IOException e){
             throw new RuntimeException("Error al cargar la imagen del caldero", e);
         }
@@ -45,26 +38,34 @@ public class Entrada extends ObjetoGrafico {
         return this.positionY;
     }
 
-    /**Genera un nuevo Lemming y lo añade al nivel.
-     * No se si ponerlo aca o que el JLemming lo haga
-    */
-    public void SpawnLemmings(int CantLemmings) {
-            for (int i = 0; i < CantLemmings; i++) {
-            Lemming lemming = CrearLemming();
-            //mostrarEnPantalla(lemming); // Asumiendo que el nivel tiene este método
-        }
-        
+    /**
+     * Genera nuevos Lemmings cada 2 segundos y los añade al nivel.
+     * Este método inicia un hilo que crea los lemmings con el intervalo deseado.
+     */
+    public void spawnLemmings(int cantLemmings) {
+        new Thread(() -> {
+            for (int i = 0; i < cantLemmings; i++) {
+                Lemming lemming = crearLemming();
+                // mostrarEnPantalla(lemming); // Asumiendo que el nivel tiene este método
+                try {
+                    Thread.sleep(2000); // Espera 2 segundos antes de crear el siguiente
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }).start();
     }
 
-    public Lemming CrearLemming() {
-        Lemming nuevo = new Lemming("imagenes/Lemmings_Puertas_Personajes",100.0);
-        return nuevo;
+    public Lemming crearLemming() {
+        // Ajusta los argumentos según el constructor definido en la clase Lemming
+        return Lemming lemming = new Lemming("imagenes/Lemmings_Puertas_Personajes");
     }
 
     @Override
     public void draw(Graphics2D g){
-        if(spritePuertaEntrada != null){
-            g.drawImage(spritePuertaEntrada,(int)positionX, (int)positionY,null);
+        if(imagenEntrada != null){
+            g.drawImage(imagenEntrada,(int)positionX, (int)positionY,null);
         }
     }
     

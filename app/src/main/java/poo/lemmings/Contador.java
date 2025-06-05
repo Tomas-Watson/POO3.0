@@ -1,69 +1,83 @@
 package poo.lemmings;
 
-import org.example.ObjetoGrafico;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Graphics2D;
 import java.text.DecimalFormat;
 
+import org.example.ObjetoGrafico;
+
+// Clase que lleva el conteo de lemmings y el temporizador
 public class Contador extends ObjetoGrafico {
     private int contadorSalvados;
     private int contadorUsados;
-    private int tiempo;
+    private int contadorPerdidos;
+    private int tiempo;  // tiempo restante en segundos
     private DecimalFormat twoDigits = new DecimalFormat("00");
 
-    
-    public Contador(int x, int y) {
+    public Contador(int x, int y, int tiempoInicial) {
         super(x, y);
         this.contadorSalvados = 0;
         this.contadorUsados = 0;
+        this.contadorPerdidos = 0;
+        this.tiempo = tiempoInicial;
     }
 
     public void incrementarSalvados() {
         this.contadorSalvados++;
     }
 
+    
     public void incrementarUsados() {
         this.contadorUsados++;
     }
 
-    public int getContadorSalvados() {
-        return contadorSalvados;
+    
+    public void incrementarPerdidos() {
+        this.contadorPerdidos++;
     }
 
-    public int getContadorUsados() {
-        return contadorUsados;
+    public int getContadorSalvados() { return contadorSalvados; }
+    public int getContadorUsados()   { return contadorUsados; }
+    public int getContadorPerdidos() { return contadorPerdidos; }
+    public int getTiempoRestante()   { return tiempo; }
+
+    
+    public double getPorcentajeExito() {
+        if (contadorUsados == 0) return 0.0;
+        return (contadorSalvados / (double)contadorUsados) * 100.0;
     }
 
-        /** Llama a este método cada segundo para descontar tiempo */
+   
     public void tick() {
         if (tiempo > 0) {
             tiempo--;
         }
     }
 
-    /** Formatea el tiempo en mm:ss */
+    // Formato tiempo en mm:ss
     private String formatTime() {
         int min = tiempo / 60;
         int sec = tiempo % 60;
         return twoDigits.format(min) + ":" + twoDigits.format(sec);
     }
 
-    public void display(Graphics2D g2) {
-        // Si tiene una imagen de fondo para el contador, se puede dibujar primero.
+    @Override
+    public void draw(Graphics2D g2) {
         if (imagen != null) {
             g2.drawImage(imagen, (int)positionX, (int)positionY, null);
         }
-        
+        // Texto en color blanco, fuente notable
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 20));
-        
-        
-        String texto = "Salvados: " + contadorSalvados;
-        g2.drawString(texto, (int)positionX + 10, (int)positionY + 25);
-
-        g2.drawString("TIME " + formatTime(), (int)positionX + 160, (int)positionY + 25);
+        // Mostrar cantidad de salvados
+        g2.drawString("Salvados: " + contadorSalvados, (int)positionX + 10, (int)positionY + 25);
+        // Mostrar cantidad de perdidos
+        g2.drawString("Perdidos: " + contadorPerdidos, (int)positionX + 10, (int)positionY + 50);
+        // Mostrar porcentaje de éxito formateado (ej: 75.0%)
+        String porcentajeTexto = String.format("Éxito: %.1f%%", getPorcentajeExito());
+        g2.drawString(porcentajeTexto, (int)positionX + 10, (int)positionY + 75);
+        // Mostrar tiempo restante
+        g2.drawString("Tiempo: " + formatTime(), (int)positionX + 180, (int)positionY + 25);
     }
 }
 
