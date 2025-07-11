@@ -32,4 +32,11 @@ public class Temporizador {
         g.setColor(Color.GREEN);
         g.drawString("Tiempo: " + getMinutos() + ":" + String.format("%02d", getSegundos()), 576, 550);
     }
+
+    public long getTiempoTranscurrido() {
+        // Retorna el tiempo transcurrido en segundos
+        return (long)(getTiempoInicial() - tiempoRestante);
+    }
+
+   
 }
