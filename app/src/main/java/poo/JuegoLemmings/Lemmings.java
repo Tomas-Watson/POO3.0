@@ -1,4 +1,4 @@
-package JuegoLemmings;
+package poo.JuegoLemmings;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -38,7 +38,7 @@ public class Lemmings extends JGame{
     private boolean turbo = false;        
     private double timerapido = 1.0; 
 
-    private Pixel pixeles[];
+    private Bloque bloques[];
     private List<Personaje> lemming;
     private Personaje personajeSeleccionado;
     private Terreno terreno;
@@ -205,7 +205,7 @@ public class Lemmings extends JGame{
         int filaEntrada = 1;
 
         //Aqui cargo el terreno
-        pixeles = new Pixel[4];
+        bloques = new Bloque[4];
 
         //Aqui cargo la entrada
         entrada = new Entrada();
@@ -496,7 +496,7 @@ public class Lemmings extends JGame{
         }
 
         //Cargo el terreno
-        terreno = new Terreno(pixeles);
+        terreno = new Terreno(bloques);
         terreno.getImg();
         terreno.CargarTerreno(archivosNivel[nivel]);
 

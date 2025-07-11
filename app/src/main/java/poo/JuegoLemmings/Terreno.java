@@ -1,4 +1,4 @@
-package JuegoLemmings;
+package poo.JuegoLemmings;
 
 import java.awt.Graphics2D;
 import java.io.BufferedReader;
@@ -18,13 +18,13 @@ public class Terreno extends ObjetoGrafico {
     private static final int screenAncho = baldosa * maxScreenColumnas;
     private static final int screenAlto = baldosa * maxScreenFilas;
     public int[][] mapNivel;
-    private Pixel[] pixeles; // Array de tipos de Pixel
+    private Bloque[] bloques; // Array de tipos de Pixel
 
     private final int r =20; //para explosiones
 
-    public Terreno(Pixel[] pixeles) {
+    public Terreno(Bloque[] bloques) {
         super(screenAncho,screenAlto);
-        this.pixeles = pixeles; // Recibe el array de tipos de Pixel
+        this.bloques = bloques; // Recibe el array de tipos de Pixel
         mapNivel = new int[maxScreenColumnas][maxScreenFilas];
     }
 
@@ -63,26 +63,27 @@ public class Terreno extends ObjetoGrafico {
     }
     }
 
-    public void getImg(){
-        //completar innicializando los numeros con imagenes
+    public void getImg() {
         try {
-           pixeles[0] = new Pixel();
-           pixeles[0].imagen = ImageIO.read(getClass().getResourceAsStream(" "));
-           pixeles[0].esSolido=false;
-            
+            // Bloque 0: aire (no sólido, sin imagen)
+            bloques[0] = new Bloque();
+            bloques[0].setImagen(null);
+            bloques[0].setesSolido(false);
 
-            pixeles[1] = new Pixel();
-            pixeles[1].imagen = ImageIO.read(getClass().getResourceAsStream("/Imagenes_Lemmings/tierra.PNG"));
-            pixeles[1].esSolido= true;
-            
+            // Bloque 1: tierra (sólido, imagen tierra.PNG)
+            bloques[1] = new Bloque();
+            bloques[1].setImagen(ImageIO.read(getClass().getResourceAsStream("/Imagenes_Lemmings/tierra.PNG")));
+            bloques[1].setesSolido(true);
 
+            // Bloque 2: grass (sólido, imagen grass01.png)
+            bloques[2] = new Bloque();
+            bloques[2].setImagen(ImageIO.read(getClass().getResourceAsStream("/Imagenes_Lemmings/grass01.png")));
+            bloques[2].setesSolido(true);
 
-            pixeles[2] = new Pixel();
-            pixeles[2].imagen = ImageIO.read(getClass().getResourceAsStream("/Imagenes_Lemmings/grass01.png"));
-            pixeles[2].esSolido=true;
-
-            pixeles[3] = new Pixel();//para el BLOCKER
-            pixeles[3].esSolido= true;
+            // Bloque 3: blocker (sólido, sin imagen)
+            bloques[3] = new Bloque();
+            bloques[3].setImagen(null);
+            bloques[3].setesSolido(true);
 
         } catch (Exception e) {
             System.out.println("Hay error acaaa" + e);
@@ -94,9 +95,9 @@ public class Terreno extends ObjetoGrafico {
         for (int col = 0; col < maxScreenColumnas; col++) {
             for (int fila = 0; fila < maxScreenFilas; fila++) {
                 int tipoPixel = mapNivel[col][fila];
-                Pixel pixel = pixeles[tipoPixel];
-                if (pixel != null && pixel.getImage() != null) {
-                    g2.drawImage((java.awt.Image) pixel.getImage(), col * baldosa, fila * baldosa, baldosa, baldosa, null);
+                Bloque bloque = bloques[tipoPixel];
+                if (bloque != null && bloque.getImagen() != null) {
+                    g2.drawImage((java.awt.Image) bloque.getImagen(), col * baldosa, fila * baldosa, baldosa, baldosa, null);
                 }
             }
         }
@@ -113,7 +114,7 @@ public class Terreno extends ObjetoGrafico {
         }
 
         int tipoPixel = mapNivel[col][fila];
-        Pixel pixel = pixeles[tipoPixel];
+        Bloque pixel = bloques[tipoPixel];
         return pixel != null && pixel.esSolido();
     }
 
@@ -192,7 +193,7 @@ public class Terreno extends ObjetoGrafico {
                 break;
             }
             // si topamos con algo sólido, no ponemos ese bloque y paramos
-            if (pixeles[ mapNivel[col][fila] ].esSolido()) {
+            if (bloques[ mapNivel[col][fila] ].esSolido()) {
                 break;
             }
             // pintamos el bloque “grass” (tile 2)
@@ -224,8 +225,8 @@ public class Terreno extends ObjetoGrafico {
         // Chequea si hay bloque sólido en la posición actual y justo encima
         int tipoPixelActual = mapNivel[col][fila];
         int tipoPixelArriba = mapNivel[col][fila - 1];
-        Pixel pixelActual = pixeles[tipoPixelActual];
-        Pixel pixelArriba = pixeles[tipoPixelArriba];
+        Bloque pixelActual = bloques[tipoPixelActual];
+        Bloque pixelArriba = bloques[tipoPixelArriba];
 
         return (pixelActual != null && pixelActual.esSolido()) && (pixelArriba != null && pixelArriba.esSolido());
     }

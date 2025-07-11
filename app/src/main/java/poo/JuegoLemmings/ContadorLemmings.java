@@ -1,4 +1,4 @@
-package JuegoLemmings;
+package poo.JuegoLemmings;
 
 import java.awt.Color;
 import java.awt.Font;

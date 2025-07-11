@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import poo.lemmings.Lemmings;
+import poo.JuegoLemmings.Lemmings;
 import poo.pong.Pong;
 
 public class SistemaJuegos extends JPanel implements ActionListener {
