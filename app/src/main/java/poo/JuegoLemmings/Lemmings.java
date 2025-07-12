@@ -75,6 +75,7 @@ public class Lemmings extends JGame {
     private int habilidadActual = -1;
 
     private Temporizador temp;
+    private List<Long> tiemposPorNivel = new ArrayList<>();
     private Ranking ranking;
 
     public Lemmings() {
@@ -173,11 +174,11 @@ public class Lemmings extends JGame {
             g.setFont(new Font("Arial", Font.PLAIN, 18));
             int xi = (ANCHO_PANTALLA - g.getFontMetrics().stringWidth(instruccion)) / 2;
             g.drawString(instruccion, xi, y2 + 40);
+
+            ranking.draw(g, ANCHO_PANTALLA);
         }
 
-        if (finJuego) {
-            ranking.draw(g, ANCHO_PANTALLA, ALTO_PANTALLA);
-        }
+        
 
         if (gameOver) {
             g.setColor(new Color(0, 0, 0, 200));
@@ -312,6 +313,7 @@ public class Lemmings extends JGame {
                         if (contador.getTotalSalvados() >= lemmingsNecesario) {
                             nivelCompletado = true;
                             enPausa = true;
+                            tiemposPorNivel.add(temp.getTiempoTranscurrido());
                         }
                     }
 
@@ -422,13 +424,12 @@ public class Lemmings extends JGame {
             if (finJuego && !rankingGuardado) {
                 String nombre = JOptionPane.showInputDialog(null, "¡Ganaste! Ingresá tu nombre:");
                 if (nombre != null && !nombre.trim().isEmpty()) {
-                    long tiempoTotal = temp.getTiempoTranscurrido(); 
+                    // suma todos los tiempos de niveles
+                    long tiempoTotal = tiemposPorNivel.stream().mapToLong(Long::longValue).sum();
                     int lemmingsSalvados = contador.getTotalSalvados();
-
                     Jugador jugador = new Jugador(nombre);
-                    jugador.setTiempoSegundos(tiempoTotal); 
-                    jugador.setLemmingsSalvados(lemmingsSalvados); 
-
+                    jugador.setTiempoSegundos(tiempoTotal);
+                    jugador.setLemmingsSalvados(lemmingsSalvados);
                     ranking.agregarJugador(jugador);
                     rankingGuardado = true;
                 }
@@ -439,10 +440,9 @@ public class Lemmings extends JGame {
             return;
         }
 
-        /*
-         * Si el nivel no se completo, no es fin del juego y no es gameOver detecto la
-         * derrota
-         */
+        // Si el nivel no se completo, no es fin del juego y no es gameOver detecto la
+        // derrota
+
         if (!nivelCompletado && !finJuego && !gameOver) {
             boolean todosSpawneados = lemmingsSpawned >= lemmingsPorSpawn;
             boolean listaVacia = lemming.isEmpty();
