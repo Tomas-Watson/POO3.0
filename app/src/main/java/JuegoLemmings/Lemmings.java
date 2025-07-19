@@ -23,17 +23,17 @@ import Lanzador.Juego;
 import util.Configuracion;
 import util.Sonido;
 
-public class Lemmings extends Juego{
+public class Lemmings extends Juego {
 
     public static final int originalTileSize = 16;
     public static final int escala = 3;
 
-    public static final int tileSize = originalTileSize * escala; //48 x 48
-    //El tileSize es el tamaño de cada baldosa del terreno, en este caso 48x48px
+    public static final int tileSize = originalTileSize * escala; // 48 x 48
+    // El tileSize es el tamaño de cada baldosa del terreno, en este caso 48x48px
     private static final int maxColumnas = 16;
     private static final int maxFilas = 12;
-    private static final int ANCHO_PANTALLA = tileSize * maxColumnas; //768 / 32  =24
-    private static final int ALTO_PANTALLA = tileSize * maxFilas; //576 / 32 = 18 
+    private static final int ANCHO_PANTALLA = tileSize * maxColumnas; // 768 / 32 =24
+    private static final int ALTO_PANTALLA = tileSize * maxFilas; // 576 / 32 = 18
 
     private boolean finJuego = false;
     private boolean enPausa = false;
@@ -41,9 +41,9 @@ public class Lemmings extends Juego{
     private boolean rPresionado = false;
     private boolean nivelCompletado = false;
     private boolean gameOver = false;
-    
-    private boolean turbo = false;        
-    private double timerapido = 1.0; 
+
+    private boolean turbo = false;
+    private double timerapido = 1.0;
 
     private Bloque bloques[];
     private List<Personaje> lemming;
@@ -51,79 +51,82 @@ public class Lemmings extends Juego{
     private Terreno terreno;
     private Entrada entrada;
     private Salida salida;
-    
-    //Variables para la creacion de lemmings
+
+    // Variables para la creacion de lemmings
     private int lemmingsPorSpawn;
     private int lemmingsSpawned = 0;
     private int lemmingsNecesario;
     private double tiempoDesdeUltimo = 0.0;
     private final double spawnInterval = 1.5;
 
-    //Variables para el HUD
+    // Variables para el HUD
     private static final int PANEL_ALTURA = 50;
     private ContadorLemmings contador;
 
     private int nivelActual = 0;
-    private final String[] archivosNivel = {"/archivos_txt/nivel1.txt","/archivos_txt/nivel2.txt","/archivos_txt/nivel3.txt"};
-    //Un point representa una coordenada 2D
-    private final Point[] salidaPosiciones = {new Point(13* tileSize, 8 * tileSize),new Point(10 * tileSize, 8 * tileSize),new Point(12 * tileSize, 8 * tileSize)};
-    
-    //Rango minimo y maximo de personajes que aparecen
+    private final String[] archivosNivel = { "/archivos_txt/nivel1.txt", "/archivos_txt/nivel2.txt",
+            "/archivos_txt/nivel3.txt" };
+    // Un point representa una coordenada 2D
+    private final Point[] salidaPosiciones = { new Point(13 * tileSize, 8 * tileSize),
+            new Point(10 * tileSize, 8 * tileSize), new Point(12 * tileSize, 8 * tileSize) };
+
+    // Rango minimo y maximo de personajes que aparecen
     private static final int MIN_LEMMINGS = 4;
     private static final int MAX_LEMMINGS = 10;
     private final Random random = new Random();
 
-    //Para la barra de habilidades
+    // Para la barra de habilidades
     private BarraHabilidad barra;
-    private int habilidadActual = - 1;
+    private int habilidadActual = -1;
 
-    //Para el ranking
+    // Para el ranking
     private Temporizador temp;
     private List<Long> tiemposPorNivel = new ArrayList<>();
     private Ranking ranking;
     private boolean rankingGuardado = false;
+    private int totalLemmingsSalvados = 0;
 
-    //Sonido
+    // Sonido
     private Clip musica;
     private boolean victoriaSonada = false;
 
     public Lemmings() {
-        //super("Lemmings", ANCHO_PANTALLA, ALTO_PANTALLA);
+        // super("Lemmings", ANCHO_PANTALLA, ALTO_PANTALLA);
     }
 
     @Override
     public void gameDraw(Graphics2D g) {
-        //Seteo el color del fondo
+        // Seteo el color del fondo
         g.setColor(Color.black);
 
-        //Cargo el terreno
+        // Cargo el terreno
         terreno.draw(g);
 
-        //Aqui dibujo la Entrada
+        // Aqui dibujo la Entrada
         entrada.draw(g);
 
-        //Aqui dibujo la Salida
+        // Aqui dibujo la Salida
         salida.draw(g);
 
-        //Aqui dibujo a los Personajes
+        // Aqui dibujo a los Personajes
         for (Personaje p : lemming) {
             p.draw(g);
 
             if (p == personajeSeleccionado) {
                 // obtén dimensiones del sprite actual
-                int w = p.framesDr[p.animFrame].getWidth(); //Obtiene el ancho de la imagen
-                int h = p.framesDr[p.animFrame].getHeight(); //Obtiene el alto de la imagen
+                int w = p.framesDr[p.animFrame].getWidth(); // Obtiene el ancho de la imagen
+                int h = p.framesDr[p.animFrame].getHeight(); // Obtiene el alto de la imagen
 
                 g.setColor(Color.yellow);
-                g.drawRect((int)p.getX(), (int)p.getY(), w, h);
+                g.drawRect((int) p.getX(), (int) p.getY(), w, h);
                 g.setColor(Color.white);
             }
         }
 
-        //Dibujo el contador
+        // Dibujo el contador
         contador.draw(g);
 
-        //Dibujo el temporizador
+        // Dibujo el temporizador
         temp.dibujar(g);
 
         if (enPausa) {
@@ -135,18 +138,17 @@ public class Lemmings extends Juego{
             int x = (ANCHO_PANTALLA - metrics.stringWidth("¿Por qué pausas tremendo juegaso?")) / 2;
             int y = (ALTO_PANTALLA / 2) - 70;
 
-            
-            g.drawString("¿Por qué pausas tremendo juegazo?", x, y); 
+            g.drawString("¿Por qué pausas tremendo juegazo?", x, y);
         }
 
         barra.draw(g);
 
-        if(nivelCompletado){
-            g.setColor(new Color(0,0,0,150)); //Esto es un fondo semitransparente
-            g.fillRect(0,0,ANCHO_PANTALLA,ALTO_PANTALLA);
+        if (nivelCompletado) {
+            g.setColor(new Color(0, 0, 0, 150)); // Esto es un fondo semitransparente
+            g.fillRect(0, 0, ANCHO_PANTALLA, ALTO_PANTALLA);
 
             g.setColor(Color.white);
-            g.setFont(new Font("Arial",Font.BOLD,24));
+            g.setFont(new Font("Arial", Font.BOLD, 24));
 
             String mensaje = "¡Nivel completado - Muy bien chinchulin!";
             FontMetrics fm = g.getFontMetrics();
@@ -154,19 +156,19 @@ public class Lemmings extends Juego{
             int x = (ANCHO_PANTALLA - fm.stringWidth(mensaje)) / 2;
             int y = ALTO_PANTALLA / 2 - 20;
 
-            g.drawString(mensaje,x,y);
+            g.drawString(mensaje, x, y);
 
             String instruccion = "Presiona ENTER para avanzar de nivel";
             int x2 = (ANCHO_PANTALLA - fm.stringWidth(instruccion)) / 2;
             g.drawString(instruccion, x2, y + 40);
-        } 
+        }
 
-        if(finJuego){
-            g.setColor( new Color(0,0,0,200));
-            g.fillRect(0,0,ANCHO_PANTALLA,ALTO_PANTALLA);
+        if (finJuego) {
+            g.setColor(new Color(0, 0, 0, 200));
+            g.fillRect(0, 0, ANCHO_PANTALLA, ALTO_PANTALLA);
 
             g.setColor(Color.white);
-            g.setFont(new Font("Arial",Font.BOLD,24));
+            g.setFont(new Font("Arial", Font.BOLD, 24));
 
             String linea1 = "¡Terminaste el juego!";
             String linea2 = "¡Felicitaciones!";
@@ -188,7 +190,7 @@ public class Lemmings extends Juego{
             ranking.draw(g, ANCHO_PANTALLA);
         }
 
-        if (gameOver) { 
+        if (gameOver) {
             g.setColor(new Color(0, 0, 0, 200));
             g.fillRect(0, 0, ANCHO_PANTALLA, ALTO_PANTALLA);
 
@@ -204,14 +206,14 @@ public class Lemmings extends Juego{
             String msg2 = "Presiona R para reintentar o ESC para salir";
             int x2 = (ANCHO_PANTALLA - fm.stringWidth(msg2)) / 2;
             g.drawString(msg2, x2, y1 + 40);
-            return; //no dibuja nada
+            return; // no dibuja nada
         }
-        
+
     }
 
     @Override
     public void gameShutdown() {
-        
+
         Log.info(getClass().getSimpleName(), "Shutting down game");
         Sonido.detenerMusica(musica);
     }
@@ -224,36 +226,36 @@ public class Lemmings extends Juego{
         if (Configuracion.get().musicaActivada) {
             musica = Sonido.reproducirMusica("musica/Zelda.wav");
         }
-        
+
         int colEntrada = 2;
         int filaEntrada = 1;
 
-        //Aqui cargo el terreno
+        // Aqui cargo el terreno
         bloques = new Bloque[4];
 
-        //Aqui cargo la entrada
+        // Aqui cargo la entrada
         entrada = new Entrada();
-        entrada.setPosition(colEntrada * tileSize,filaEntrada * tileSize);
-        
-        //Aqui cargo a los lemmings
+        entrada.setPosition(colEntrada * tileSize, filaEntrada * tileSize);
+
+        // Aqui cargo a los lemmings
         lemming = new ArrayList<>();
 
-        //Cargo nivel actual, y ademas se carga el terreno
+        // Cargo nivel actual, y ademas se carga el terreno
         cargarNivel(nivelActual);
 
-        //Cargo el temporizador
+        // Cargo el temporizador
         temp = new Temporizador(60); // 2 minutos
 
-        //Cargo las habilidades
+        // Cargo las habilidades
         Habilidad[] habilidad = new Habilidad[Habilidad.Tipo.values().length];
         for (int i = 0; i < habilidad.length; i++) {
             habilidad[i] = new Habilidad(Habilidad.Tipo.values()[i], null, terreno);
         }
 
-        //Cargo la barra de habilidades
+        // Cargo la barra de habilidades
         barra = new BarraHabilidad(ANCHO_PANTALLA, ALTO_PANTALLA);
 
-        //Cargo el ranking
+        // Cargo el ranking
         ranking = new Ranking();
 
     }
@@ -264,9 +266,9 @@ public class Lemmings extends Juego{
         Mouse mouse = this.getMouse();
         Keyboard keyboard = this.getKeyboard();
         double EscalaDelta = delta * timerapido;
-        
-        if(!finJuego){
-            
+
+        if (!finJuego) {
+
             // Pausar/reanudar el juego con 'P'
             if (keyboard.isKeyPressed(KeyEvent.VK_P)) {
                 if (!pPresionado) {
@@ -277,8 +279,8 @@ public class Lemmings extends Juego{
                 pPresionado = false;
             }
 
-            if(keyboard.isKeyPressed(KeyEvent.VK_R)){
-                if(!rPresionado){
+            if (keyboard.isKeyPressed(KeyEvent.VK_R)) {
+                if (!rPresionado) {
                     cargarNivel(nivelActual);
                     nivelCompletado = false;
                     enPausa = false;
@@ -286,7 +288,7 @@ public class Lemmings extends Juego{
                 }
             }
 
-            if (keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)){
+            if (keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)) {
                 System.exit(0);
             }
 
@@ -306,38 +308,41 @@ public class Lemmings extends Juego{
                     }
 
                     // Si alcanza la salida:
-                    int px = (int) p.getX(); //Tomo la posicion en X del personaje
-                    int py = (int) p.getY(); //Tomo la posicion en Y del personaje
+                    int px = (int) p.getX(); // Tomo la posicion en X del personaje
+                    int py = (int) p.getY(); // Tomo la posicion en Y del personaje
 
-                    int anchoSprite = p.framesDr[p.animFrame].getWidth();//Tomo el ancho de la imagen del personaje
-                    int altoSprite  = p.framesDr[p.animFrame].getHeight();//Tomo el alto de la imagen del personaje
+                    int anchoSprite = p.framesDr[p.animFrame].getWidth();// Tomo el ancho de la imagen del personaje
+                    int altoSprite = p.framesDr[p.animFrame].getHeight();// Tomo el alto de la imagen del personaje
 
-                    int sx = (int) salida.getX(); //Tomo la posicion en X de la salida
-                    int sy = (int) salida.getY(); //Tomo la posicion en Y de la salida
+                    int sx = (int) salida.getX(); // Tomo la posicion en X de la salida
+                    int sy = (int) salida.getY(); // Tomo la posicion en Y de la salida
 
-                    boolean colisionSalida = px + anchoSprite > sx && px < sx + tileSize && py + altoSprite > sy && py < sy + tileSize;
-                    //El boolean colisionSalida por defecto retorna TRUE
+                    boolean colisionSalida = px + anchoSprite > sx && px < sx + tileSize && py + altoSprite > sy
+                            && py < sy + tileSize;
+                    // El boolean colisionSalida por defecto retorna TRUE
                     if (colisionSalida) {
                         if (contador.getTotalSalvados() < lemmingsNecesario) {
                             contador.incrementar();
                         }
                         it.remove();
 
-                        // 3) Si justo acabo de llegar al necesario, se muestra el cartel del fin de nivel
+                        // 3) Si justo acabo de llegar al necesario, se muestra el cartel del fin de
+                        // nivel
                         if (contador.getTotalSalvados() >= lemmingsNecesario) {
                             nivelCompletado = true;
                             enPausa = true;
                         }
                     }
 
-                    //Si el personaje se sale de los limites de la pantalla, lo remuevo y muestro un cartel de perdiste
-                    if (px + anchoSprite < 0 || px > ANCHO_PANTALLA|| py + altoSprite < 0 || py > ALTO_PANTALLA) {
+                    // Si el personaje se sale de los limites de la pantalla, lo remuevo y muestro
+                    // un cartel de perdiste
+                    if (px + anchoSprite < 0 || px > ANCHO_PANTALLA || py + altoSprite < 0 || py > ALTO_PANTALLA) {
                         it.remove();
-                        continue;  // pasamos al siguiente lemming
+                        continue; // pasamos al siguiente lemming
                     }
                 }
 
-                //Controla la aparicion de los lemmings
+                // Controla la aparicion de los lemmings
                 if (lemmingsSpawned < lemmingsPorSpawn) {
 
                     tiempoDesdeUltimo += EscalaDelta;
@@ -349,7 +354,7 @@ public class Lemmings extends Juego{
                     }
                 }
 
-                //Le doy movimiento a la entrada
+                // Le doy movimiento a la entrada
                 entrada.update(EscalaDelta);
 
                 // Detectar clic izquierdo
@@ -362,21 +367,21 @@ public class Lemmings extends Juego{
                     if (sel >= 0) {
 
                         habilidadActual = sel;
-                        personajeSeleccionado = null;   // deselecciona visualmente
+                        personajeSeleccionado = null; // deselecciona visualmente
                         Habilidad.Tipo tipoSel = Habilidad.Tipo.values()[sel];
 
                         if (tipoSel == Habilidad.Tipo.VELOX2) {
                             turbo = !turbo;
                             timerapido = turbo ? 2.0 : 1.0;
-            
+
                             habilidadActual = -1;
                             personajeSeleccionado = null;
-                            return;   
+                            return;
                         }
                         if (tipoSel == Habilidad.Tipo.NUKE) {
                             for (Personaje p : lemming) {
                                 p.setHabilidadPendiente(new Habilidad(Habilidad.Tipo.NUKE, p, terreno));
-                                
+
                             }
                             // limpiamos selección para no volver a activarlo
                             habilidadActual = -1;
@@ -387,13 +392,13 @@ public class Lemmings extends Juego{
                         Personaje clicado = null;
                         final int PAD = 8;
                         for (Personaje p : lemming) {
-                            int px = (int)p.getX();
-                            int py = (int)p.getY();
+                            int px = (int) p.getX();
+                            int py = (int) p.getY();
 
-                            int w  = p.framesDr[p.animFrame].getWidth();
-                            int h  = p.framesDr[p.animFrame].getHeight();
+                            int w = p.framesDr[p.animFrame].getWidth();
+                            int h = p.framesDr[p.animFrame].getHeight();
 
-                            Rectangle r = new Rectangle(px - PAD, py - PAD, w + PAD*2, h + PAD*2);
+                            Rectangle r = new Rectangle(px - PAD, py - PAD, w + PAD * 2, h + PAD * 2);
                             if (r.contains(mx, my)) {
                                 clicado = p;
                                 break;
@@ -413,13 +418,19 @@ public class Lemmings extends Juego{
             }
 
         }
-        
-        //Si el nivel fue completado y presiono la tecla enter paso al siguiente nivel
+
+        // Si el nivel fue completado y presiono la tecla enter paso al siguiente nivel
         if (nivelCompletado && keyboard.isKeyPressed(KeyEvent.VK_ENTER)) {
+            // 1) Acumulo lemmings salvados de este nivel
+            totalLemmingsSalvados += contador.getTotalSalvados();
+
+            // 2) guardo tiempo de este nivel
+            long tiempoLevel = temp.getTiempoTranscurrido();
+            tiemposPorNivel.add(tiempoLevel);
+
+            // 3) Paso al siguiente nivel o marco fin del juego
             nivelCompletado = false;
             enPausa = false;
-            
-            //Si no es el ultimo nivel 
             if (nivelActual < archivosNivel.length - 1) {
                 nivelActual++;
                 cargarNivel(nivelActual);
@@ -428,28 +439,28 @@ public class Lemmings extends Juego{
             }
         }
 
-        //Si se llego al ultimo nivel y se logra pasarlo con exito, debo presionar ENTER y se deberia mostrar un cartel 
+        // Si se llego al ultimo nivel y se logra pasarlo con exito, debo presionar
+        // ENTER y se deberia mostrar un cartel
         if (finJuego && !rankingGuardado) {
 
             String nombre = JOptionPane.showInputDialog(null, "¡Ganaste! Ingresá tu nombre:");
-                if (nombre != null && !nombre.trim().isEmpty()) {
-                    // suma todos los tiempos de niveles
-                    long tiempoTotal = tiemposPorNivel.stream().mapToLong(Long::longValue).sum();
-                    int lemmingsSalvados = contador.getTotalSalvados();
-                    Jugador jugador = new Jugador(nombre);
-                    jugador.setTiempoSegundos(tiempoTotal);
-                    jugador.setLemmingsSalvados(lemmingsSalvados);
-                    ranking.agregarJugador(jugador);
-                    rankingGuardado = true;
-                }
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                // suma todos los tiempos de niveles
+                long tiempoTotal = tiemposPorNivel.stream().mapToLong(Long::longValue).sum();
+                Jugador jugador = new Jugador(nombre);
+                jugador.setTiempoSegundos(tiempoTotal);
+                jugador.setLemmingsSalvados(totalLemmingsSalvados);
+                ranking.agregarJugador(jugador);
+                rankingGuardado = true;
+            }
 
             if (keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)) {
-                System.exit(0);
+                rankingGuardado = true; 
+                return; 
             }
             return;
         }
 
-        
         if (!nivelCompletado && !finJuego && !gameOver) {
             boolean todosSpawneados = lemmingsSpawned >= lemmingsPorSpawn;
             boolean listaVacia = lemming.isEmpty();
@@ -461,7 +472,8 @@ public class Lemmings extends Juego{
             }
         }
 
-        //Tras una derrota, le doy la opcion al usuario de reiniciar con R o salir con ESC
+        // Tras una derrota, le doy la opcion al usuario de reiniciar con R o salir con
+        // ESC
         if (gameOver) {
             if (getKeyboard().isKeyPressed(KeyEvent.VK_R)) {
                 // reiniciar mismo nivel
@@ -471,16 +483,16 @@ public class Lemmings extends Juego{
             } else if (getKeyboard().isKeyPressed(KeyEvent.VK_ESCAPE)) {
                 System.exit(0);
             }
-            return; //NO se procesa mas 
+            return; // NO se procesa mas
         }
     }
 
     private void spawnNuevoLemming() {
-        //Posición de la entrada 
+        // Posición de la entrada
         int xEntrada = (int) entrada.getX() + 40;
         int yEntrada = (int) entrada.getY();
 
-        //Primero creo al Personaje asumiendo que "yEntrada" es la base
+        // Primero creo al Personaje asumiendo que "yEntrada" es la base
         Personaje p = new Personaje(xEntrada, yEntrada, terreno);
 
         int col = (xEntrada + 2) / tileSize;
@@ -494,7 +506,7 @@ public class Lemmings extends Juego{
             }
         }
 
-        //Si encontramos un ground válido, calculamos startY según su alto de sprite:
+        // Si encontramos un ground válido, calculamos startY según su alto de sprite:
         int altoSprite = p.framesDr[0].getHeight();
         int spawnY;
         if (filaGround >= 0) {
@@ -506,54 +518,60 @@ public class Lemmings extends Juego{
         }
         p.setY(spawnY);
 
-        //Finalmente agregamos el nuevo lemming a la lista
+        // Finalmente agregamos el nuevo lemming a la lista
         lemming.add(p);
     }
 
     private void cargarNivel(int nivel) {
 
-        //Creo una cantidad random de lemmings con un minimo y un maximo
+        // Creo una cantidad random de lemmings con un minimo y un maximo
         lemmingsPorSpawn = random.nextInt(MAX_LEMMINGS - MIN_LEMMINGS + 1) + MIN_LEMMINGS;
-        lemmingsNecesario = Math.max(1,lemmingsPorSpawn - 2);
+        lemmingsNecesario = Math.max(1, lemmingsPorSpawn - 2);
 
-        //Genero el contador y le paso la cantidad de Lemmings Necesario y la cantidad que se generar en ese nivel
-        if(contador == null){
-            contador = new ContadorLemmings(576, 480, ANCHO_PANTALLA/4, PANEL_ALTURA, lemmingsNecesario);
-            contador.setLemmingsTotales( lemmingsPorSpawn);
+        // Genero el contador y le paso la cantidad de Lemmings Necesario y la cantidad
+        // que se generar en ese nivel
+        if (contador == null) {
+            contador = new ContadorLemmings(576, 480, ANCHO_PANTALLA / 4, PANEL_ALTURA, lemmingsNecesario);
+            contador.setLemmingsTotales(lemmingsPorSpawn);
 
         } else {
             contador.setNecesarios(lemmingsPorSpawn);
-            contador = new ContadorLemmings(576, 480, ANCHO_PANTALLA/4, PANEL_ALTURA, lemmingsNecesario);
+            contador = new ContadorLemmings(576, 480, ANCHO_PANTALLA / 4, PANEL_ALTURA, lemmingsNecesario);
             contador.setLemmingsTotales(lemmingsPorSpawn);
         }
 
-        //Al pasar de nivel se resetea el contador
-        if (salida != null){
+        // Al pasar de nivel se resetea el contador
+        if (salida != null) {
             salida.resetContador();
         }
 
-        //Cargo el terreno
+        // Cargo el terreno
         terreno = new Terreno(bloques);
         terreno.getImg();
         terreno.CargarTerreno(archivosNivel[nivel]);
 
-        //Coloco la entrada 
+        // Coloco la entrada
         entrada.setPosition(2 * tileSize, 1 * tileSize);
 
         // Creo la misma salida en la posición del nivel
         // Si ya existía, cambio su posición
         if (salida == null) {
-            salida = new Salida();            
+            salida = new Salida();
         }
         Point pos = salidaPosiciones[nivel];
         salida.setPosition(pos.x, pos.y);
 
-        //Reinicio el temporizador en 60segundos, con el paso de niveles
+        // Reinicio el temporizador en 60segundos, con el paso de niveles
         temp = new Temporizador(60.0);
 
-        //Reset de lemmings y contador
+        // Reset de lemmings y contador
         lemming.clear();
         lemmingsSpawned = 0;
-        finJuego     = false;
+        finJuego = false;
     }
+
+    public Ranking getRanking() {
+        return ranking;
+    }
+
 }
