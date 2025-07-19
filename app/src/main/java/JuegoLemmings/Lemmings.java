@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
 
 import com.entropyinteractive.Keyboard;
@@ -19,6 +20,8 @@ import com.entropyinteractive.Log;
 import com.entropyinteractive.Mouse;
 
 import Lanzador.Juego;
+import util.Configuracion;
+import util.Sonido;
 
 public class Lemmings extends Juego{
 
@@ -79,6 +82,10 @@ public class Lemmings extends Juego{
     private List<Long> tiemposPorNivel = new ArrayList<>();
     private Ranking ranking;
     private boolean rankingGuardado = false;
+
+    //Sonido
+    private Clip musica;
+    private boolean victoriaSonada = false;
 
     public Lemmings() {
         //super("Lemmings", ANCHO_PANTALLA, ALTO_PANTALLA);
@@ -206,11 +213,17 @@ public class Lemmings extends Juego{
     public void gameShutdown() {
         
         Log.info(getClass().getSimpleName(), "Shutting down game");
+        Sonido.detenerMusica(musica);
     }
 
     @Override
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
+
+        // Música de fondo
+        if (Configuracion.get().musicaActivada) {
+            musica = Sonido.reproducirMusica("musica/Zelda.wav");
+        }
         
         int colEntrada = 2;
         int filaEntrada = 1;

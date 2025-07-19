@@ -8,6 +8,8 @@ public abstract class Juego extends JGame {
 
     public Juego() {
         super("Juego Lemmings", 800, 600);
+
+        
     }
 
     @Override

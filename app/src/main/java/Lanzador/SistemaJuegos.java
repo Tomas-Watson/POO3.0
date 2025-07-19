@@ -121,9 +121,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
 
     private void iniciarJuego(String juego) {
 
-        if (hiloJuego != null && hiloJuego.isAlive()) {
-            // aquí podrías interrumpir el hilo, etc.
-        }
+
         // Igual a tu lógica anterior: lanza el juego en un hilo
         switch (juego) {
             case "JuegoPong":

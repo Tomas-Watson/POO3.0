@@ -1,6 +1,8 @@
 package pong;
-
 import java.awt.Rectangle;
+
+import util.Configuracion;
+import util.Sonido;
 
 public class DetectorColisiones extends Rectangle {
         // Metodos de colisiones del juego Pong
@@ -10,9 +12,15 @@ public class DetectorColisiones extends Rectangle {
         // Colisión de la pelota con los bordes
                 if (pelotita.getX() < 0 || pelotita.getX() + pelotita.getRadio() * 2 > ANCHO_PANTALLA) {
                         pelotita.rebotarHorizontal();
+                        if (Configuracion.get().sonidoActivado) {
+                                Sonido.reproducirEfecto("musica/Rebote.wav");
+                        }
                 }
                 if (pelotita.getY() < 30 || pelotita.getY() + pelotita.getRadio() * 2 > ALTO_PANTALLA) {
                         pelotita.rebotarVertical();
+                        if (Configuracion.get().sonidoActivado) {
+                                Sonido.reproducirEfecto("musica/Rebote.wav");
+                        }
                 }
         }
 
@@ -27,7 +35,10 @@ public class DetectorColisiones extends Rectangle {
 
                         // Ajusta el ángulo de rebote según la distancia
                         pelotita.rebotarHorizontal();
-                        pelotita.setDY((int)(pelotita.getVelocidadMax() * distancia));               
+                        pelotita.setDY((int)(pelotita.getVelocidadMax() * distancia));
+                        if (Configuracion.get().sonidoActivado) {
+                                Sonido.reproducirEfecto("musica/Rebote.wav");
+                        }               
                 }   
         }
 

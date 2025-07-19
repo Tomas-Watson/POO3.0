@@ -41,34 +41,26 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.example.App'
+    mainClass = 'Lanzador.SistemaJuegos'
      
 }
 
 ////////NUEVO
 
 /* copia archivo desde src/main/config a los diferentes destinos */
- tasks.register("copyConfig") {
-      group = "Other"
-    description = "Copia Archivos de Configuracion"
-    doFirst {
-         println 'copyConfig'
-        copy {
-            from("src/main/config")
-            into 'build/classes/java/main/'
-           
-        }
-        copy {
-            from("src/main/config")
-            into 'build/distributions'
-           
-        }
-         
-    }
+task copyConfig(type: Copy) {
+    from 'src/main/config'
+    into 'build/classes/java/main/'
 }
- 
+task copyConfig1(type: Copy) {
+    from 'src/main/config'
+    into 'build/distributions'
+}
+
+
+
 tasks.named("build") { 
-    finalizedBy("copyConfig")
+    finalizedBy("copyConfig","copyConfig1")
     
 }
 

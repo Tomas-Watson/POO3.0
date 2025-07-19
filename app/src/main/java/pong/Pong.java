@@ -5,12 +5,16 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
+
+import javax.sound.sampled.Clip;
 
 import com.entropyinteractive.Keyboard;
 import com.entropyinteractive.Log;
 
 import Lanzador.Juego;
+import util.Configuracion;
+import util.Sonido;
+
 
 public class Pong extends Juego{
     
@@ -24,9 +28,14 @@ public class Pong extends Juego{
     private boolean enPausa = false;
     private boolean finJuego = false;
     private boolean pPresionado = false;
+    private boolean qPresionado = false;
+    private boolean ePresionado = false;
     private boolean enterPresionado = false;
     final double velocidad = 400;
-    private BufferedImage fondo;
+    private Clip musica;
+    private boolean victoriaSonada = false;
+
+
 
     public Pong(){
         //super("Pong", ANCHO_PANTALLA,ALTO_PANTALLA);
@@ -35,6 +44,12 @@ public class Pong extends Juego{
     @Override
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
+
+        // Música de fondo
+        if (Configuracion.get().musicaActivada) {
+            musica = Sonido.reproducirMusica("musica/" + Configuracion.get().pistaMusical + ".wav");
+        }
+
         //Creo las paletas
         p1 = new Paleta( 780, 250);
         p2 = new Paleta(15,250);
@@ -52,6 +67,7 @@ public class Pong extends Juego{
         // dibujar el fondo
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, ANCHO_PANTALLA,ALTO_PANTALLA);
+        
         //dibujar raquetas
         p1.display(g);
         p2.display(g);
@@ -87,7 +103,7 @@ public class Pong extends Juego{
     @Override
     public void gameShutdown() {
         
-        throw new UnsupportedOperationException("Unimplemented method 'gameShutdown'");
+        Sonido.detenerMusica(musica);
     }
 
     @Override
@@ -108,6 +124,34 @@ public class Pong extends Juego{
                 }
             } else {
                 pPresionado = false;
+            }
+
+            if (keyboard.isKeyPressed(KeyEvent.VK_Q)) {
+                if (!qPresionado) {
+                    Configuracion.get().sonidoActivado = !Configuracion.get().sonidoActivado;
+                    System.out.println("Sonido: " + (Configuracion.get().sonidoActivado ? "ON" : "OFF"));
+                    qPresionado = true;
+                }
+            } else {
+                qPresionado = false;
+            }
+
+            // Toggle música
+            if (keyboard.isKeyPressed(KeyEvent.VK_E)) {
+                if (!ePresionado) {
+                    Configuracion.get().musicaActivada = !Configuracion.get().musicaActivada;
+                    System.out.println("Música: " + (Configuracion.get().musicaActivada ? "ON" : "OFF"));
+
+                    if (!Configuracion.get().musicaActivada) {
+                        Sonido.detenerMusica(musica);
+                    } else {
+                        musica = Sonido.reproducirMusica("musica/" + Configuracion.get().pistaMusical + ".wav");
+                    }
+
+                    ePresionado = true;
+                }
+            } else {
+                ePresionado = false;
             }
 
             // Reiniciar el juego con 'Enter'
@@ -160,6 +204,11 @@ public class Pong extends Juego{
                 }
 
                 if (contador.getGanador() != null) {
+                    if (!victoriaSonada && Configuracion.get().sonidoActivado) {
+                        Sonido.reproducirEfecto("musica/victoria.wav"); // asegúrate de tener ese archivo
+                        Sonido.detenerMusica(musica);
+                        victoriaSonada = true;
+                    }
                     finJuego = true;
                 }
 
@@ -182,6 +231,7 @@ public class Pong extends Juego{
         contador.setJ2ptos(0);
         finJuego = false;
         enPausa = false;
+        victoriaSonada = false;
     } 
     
 
@@ -201,4 +251,5 @@ public class Pong extends Juego{
             p2.setY(ALTO_PANTALLA - PADDING_BOTTOM - p2.getAlto());
         }
     }
+
 }
