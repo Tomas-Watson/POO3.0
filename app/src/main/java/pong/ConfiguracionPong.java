@@ -30,10 +30,16 @@ public class ConfiguracionPong {
         sonidoActivado = true;
         musicaActivada = true;
         skinSeleccionado = "default";
+        pistaMusical = "Mizu";
 
         teclas = new HashMap<>();
         teclas.put("EFECTO", KeyEvent.VK_Q);
         teclas.put("MUSICA", KeyEvent.VK_E);
         teclas.put("PAUSA", KeyEvent.VK_SPACE);
+
+        teclas.put("J1_UP", KeyEvent.VK_UP);
+        teclas.put("J1_DOWN", KeyEvent.VK_DOWN);
+        teclas.put("J2_UP", KeyEvent.VK_W);
+        teclas.put("J2_DOWN", KeyEvent.VK_S);
     }
 }
