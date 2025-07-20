@@ -20,7 +20,7 @@ import com.entropyinteractive.Log;
 import com.entropyinteractive.Mouse;
 
 import Lanzador.Juego;
-import util.Configuracion;
+import pong.ConfiguracionPong;
 import util.Sonido;
 
 public class Lemmings extends Juego {
@@ -89,6 +89,11 @@ public class Lemmings extends Juego {
     // Sonido
     private Clip musica;
     private boolean victoriaSonada = false;
+    private boolean qPresionado = false;
+    private boolean ePresionado = false;
+
+    private ConfiguracionLemmings config;
+    private Sonido sonido;
 
     public Lemmings() {
         // super("Lemmings", ANCHO_PANTALLA, ALTO_PANTALLA);
@@ -221,10 +226,11 @@ public class Lemmings extends Juego {
     @Override
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
+        ConfiguracionLemmings config = ConfiguracionLemmings.get();
 
         // Música de fondo
-        if (Configuracion.get().musicaActivada) {
-            musica = Sonido.reproducirMusica("musica/Zelda.wav");
+        if (config.isMusicaActivada()) {
+            musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
         }
 
         int colEntrada = 2;
@@ -292,6 +298,35 @@ public class Lemmings extends Juego {
                 System.exit(0);
             }
 
+            if (keyboard.isKeyPressed(KeyEvent.VK_Q)) {
+                if (!qPresionado) {
+                    config = ConfiguracionLemmings.get();
+                    config.setSonidoActivado(!config.isSonidoActivado());
+                    System.out.println("Sonido: " + (config.isSonidoActivado() ? "ON" : "OFF"));
+                    qPresionado = true;
+                }
+            } else {
+                qPresionado = false;
+            }
+
+            if (keyboard.isKeyPressed(KeyEvent.VK_E)) {
+                if (!ePresionado) {
+                    config = ConfiguracionLemmings.get();
+                    config.setMusicaActivada(!config.isMusicaActivada());
+                    System.out.println("Música: " + (config.isMusicaActivada() ? "ON" : "OFF"));
+
+                    if (!config.isMusicaActivada()) {
+                        Sonido.detenerMusica(musica);
+                    } else {
+                        musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
+                    }
+
+                    ePresionado = true;
+                }
+            } else {
+                ePresionado = false;
+            }
+
             if (!enPausa) {
 
                 temp.actualizar(EscalaDelta);
@@ -317,14 +352,17 @@ public class Lemmings extends Juego {
                     int sx = (int) salida.getX(); // Tomo la posicion en X de la salida
                     int sy = (int) salida.getY(); // Tomo la posicion en Y de la salida
 
-                    boolean colisionSalida = px + anchoSprite > sx && px < sx + tileSize && py + altoSprite > sy
-                            && py < sy + tileSize;
+                    boolean colisionSalida = px + anchoSprite > sx && px < sx + tileSize && py + altoSprite > sy && py < sy + tileSize;
                     // El boolean colisionSalida por defecto retorna TRUE
                     if (colisionSalida) {
                         if (contador.getTotalSalvados() < lemmingsNecesario) {
                             contador.incrementar();
                         }
                         it.remove();
+
+                        if (config.isSonidoActivado()) {
+                            Sonido.reproducirEfecto("musica/musicLemming/sound/LemmingSalvado.wav");
+                        }
 
                         // 3) Si justo acabo de llegar al necesario, se muestra el cartel del fin de
                         // nivel
@@ -338,6 +376,7 @@ public class Lemmings extends Juego {
                     // un cartel de perdiste
                     if (px + anchoSprite < 0 || px > ANCHO_PANTALLA || py + altoSprite < 0 || py > ALTO_PANTALLA) {
                         it.remove();
+                        
                         continue; // pasamos al siguiente lemming
                     }
                 }
@@ -367,6 +406,7 @@ public class Lemmings extends Juego {
                     if (sel >= 0) {
 
                         habilidadActual = sel;
+
                         personajeSeleccionado = null; // deselecciona visualmente
                         Habilidad.Tipo tipoSel = Habilidad.Tipo.values()[sel];
 
@@ -391,6 +431,7 @@ public class Lemmings extends Juego {
                         // Verifica si se hizo click sobre un personaje
                         Personaje clicado = null;
                         final int PAD = 8;
+                        
                         for (Personaje p : lemming) {
                             int px = (int) p.getX();
                             int py = (int) p.getY();
@@ -437,6 +478,10 @@ public class Lemmings extends Juego {
             } else {
                 finJuego = true;
             }
+
+            if (config.isSonidoActivado()) {
+                Sonido.reproducirEfecto("musica/musicLemming/Victoria.wav");
+            }
         }
 
         // Si se llego al ultimo nivel y se logra pasarlo con exito, debo presionar
@@ -475,6 +520,12 @@ public class Lemmings extends Juego {
         // Tras una derrota, le doy la opcion al usuario de reiniciar con R o salir con
         // ESC
         if (gameOver) {
+            if (!victoriaSonada && ConfiguracionPong.get().isSonidoActivado()) {
+                Sonido.reproducirEfecto("musica/musicLemming/sound/derrota.wav");
+                Sonido.detenerMusica(musica);
+                victoriaSonada = true;
+            }
+
             if (getKeyboard().isKeyPressed(KeyEvent.VK_R)) {
                 // reiniciar mismo nivel
                 gameOver = false;

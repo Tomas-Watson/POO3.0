@@ -1,12 +1,12 @@
-package pong;
+package JuegoLemmings;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConfiguracionPong {
-
-    private static ConfiguracionPong instancia;
+public class ConfiguracionLemmings {
+    
+    private static ConfiguracionLemmings instancia;
 
     private boolean sonidoActivado;
     private boolean musicaActivada;
@@ -14,13 +14,13 @@ public class ConfiguracionPong {
     
     private Map<String, Integer> teclas;
 
-    private ConfiguracionPong() {
+    private ConfiguracionLemmings() {
         cargarPredeterminadas();
     }
 
-    public static ConfiguracionPong get() {
+    public static ConfiguracionLemmings get() {
         if (instancia == null) {
-            instancia = new ConfiguracionPong();
+            instancia = new ConfiguracionLemmings();
         }
         return instancia;
     }
@@ -28,7 +28,7 @@ public class ConfiguracionPong {
     public void cargarPredeterminadas() {
         sonidoActivado = true;
         musicaActivada = true;
-        pistaMusical = "Mizu";
+        pistaMusical = "Zelda";
         
 
         teclas = new HashMap<>();

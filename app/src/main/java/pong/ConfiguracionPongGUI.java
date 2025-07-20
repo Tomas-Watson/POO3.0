@@ -40,7 +40,7 @@ public class ConfiguracionPongGUI extends JFrame {
         // Panel para los controles
         JPanel panelControles = new JPanel(new GridLayout(5, 2, 10, 10));
         ConfiguracionPong config = ConfiguracionPong.get();
-        teclasTemp.putAll(config.teclas);
+        teclasTemp.putAll(config.getTeclas());
 
         addLabelYBoton(panelControles, "Jugador 1 Subir", "J1_UP");
         addLabelYBoton(panelControles, "Jugador 1 Bajar", "J1_DOWN");
@@ -57,7 +57,7 @@ public class ConfiguracionPongGUI extends JFrame {
 
         JButton guardar = new JButton("Guardar");
         guardar.addActionListener(e -> {
-            config.teclas.putAll(teclasTemp);
+            config.getTeclas().putAll(teclasTemp);
             JOptionPane.showMessageDialog(this, "Teclas guardadas correctamente");
             cerrarVentana();
         });

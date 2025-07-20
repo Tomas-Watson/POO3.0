@@ -1,5 +1,6 @@
 package util;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -10,19 +11,17 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sonido {
-    public static void reproducirEfecto(String archivo) {
-        try {
-            URL url = Sonido.class.getClassLoader().getResource(archivo);
-            if (url == null) {
-                throw new IllegalArgumentException("Archivo no encontrado: " + archivo);
+    public static void reproducirEfecto(String path) {
+        new Thread(() -> {
+            try {
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(new File(path));
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.start();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        }).start(); // ¡se reproduce en otro hilo!
     }
 
     public static Clip reproducirMusica(String archivo) {

@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 import javax.sound.sampled.Clip;
 import javax.swing.SwingUtilities;
@@ -13,7 +14,6 @@ import com.entropyinteractive.Keyboard;
 import com.entropyinteractive.Log;
 
 import Lanzador.Juego;
-import util.Configuracion;
 import util.Sonido;
 
 
@@ -50,10 +50,11 @@ public class Pong extends Juego{
     @Override
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
+        ConfiguracionPong config = ConfiguracionPong.get();
 
         // Música de fondo
-        if (ConfiguracionPong.get().musicaActivada) {
-            musica = Sonido.reproducirMusica("musica/" + ConfiguracionPong.get().pistaMusical + ".wav");
+        if (config.isMusicaActivada()) {
+            musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
         }
 
         //Creo las paletas
@@ -145,24 +146,25 @@ public class Pong extends Juego{
 
             if (keyboard.isKeyPressed(KeyEvent.VK_Q)) {
                 if (!qPresionado) {
-                    Configuracion.get().sonidoActivado = !Configuracion.get().sonidoActivado;
-                    System.out.println("Sonido: " + (Configuracion.get().sonidoActivado ? "ON" : "OFF"));
+                    config = ConfiguracionPong.get();
+                    config.setSonidoActivado(!config.isSonidoActivado());
+                    System.out.println("Sonido: " + (config.isSonidoActivado() ? "ON" : "OFF"));
                     qPresionado = true;
                 }
             } else {
                 qPresionado = false;
             }
 
-            // Toggle música
             if (keyboard.isKeyPressed(KeyEvent.VK_E)) {
                 if (!ePresionado) {
-                    ConfiguracionPong.get().musicaActivada = !ConfiguracionPong.get().musicaActivada;
-                    System.out.println("Música: " + (ConfiguracionPong.get().musicaActivada ? "ON" : "OFF"));
+                    config = ConfiguracionPong.get();
+                    config.setMusicaActivada(!config.isMusicaActivada());
+                    System.out.println("Música: " + (config.isMusicaActivada() ? "ON" : "OFF"));
 
-                    if (!ConfiguracionPong.get().musicaActivada) {
+                    if (!config.isMusicaActivada()) {
                         Sonido.detenerMusica(musica);
                     } else {
-                        musica = Sonido.reproducirMusica("musica/" + ConfiguracionPong.get().pistaMusical + ".wav");
+                        musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
                     }
 
                     ePresionado = true;
@@ -171,7 +173,7 @@ public class Pong extends Juego{
                 ePresionado = false;
             }
 
-            // Reiniciar el juego con 'Enter'
+
             if (keyboard.isKeyPressed(KeyEvent.VK_R)) {
                 if (!rPresionada) {
                     reiniciarJuego();
@@ -184,10 +186,11 @@ public class Pong extends Juego{
 
             if (!enPausa) {
                 // Mover las paletas con las teclas configuradas
-                int j1Up = ConfiguracionPong.get().teclas.get("J1_UP");
-                int j1Down = ConfiguracionPong.get().teclas.get("J1_DOWN");
-                int j2Up = ConfiguracionPong.get().teclas.get("J2_UP");
-                int j2Down = ConfiguracionPong.get().teclas.get("J2_DOWN");
+                Map<String, Integer> teclas = ConfiguracionPong.get().getTeclas();
+                int j1Up = teclas.get("J1_UP");
+                int j1Down = teclas.get("J1_DOWN");
+                int j2Up = teclas.get("J2_UP");
+                int j2Down = teclas.get("J2_DOWN");
 
                 if (keyboard.isKeyPressed(j1Up)) {
                     p1.setY(p1.getY() - velocidad * delta);
@@ -223,8 +226,8 @@ public class Pong extends Juego{
                 }
 
                 if (contador.getGanador() != null) {
-                    if (!victoriaSonada && ConfiguracionPong.get().sonidoActivado) {
-                        Sonido.reproducirEfecto("musica/victoria.wav"); // asegúrate de tener ese archivo
+                    if (!victoriaSonada && ConfiguracionPong.get().isSonidoActivado()) {
+                        Sonido.reproducirEfecto("musica/victoria.wav");
                         Sonido.detenerMusica(musica);
                         victoriaSonada = true;
                     }
