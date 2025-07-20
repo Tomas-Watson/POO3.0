@@ -80,28 +80,30 @@ public class Personaje extends ObjetoGrafico implements ObjetoGraficoMovible {
     @Override
     public void moverse(double delta) {
         // --- Animación de habilidad especial ---
-        if (skillFrames != null) {
+       if (skillFrames != null) {
             skillTimer += delta;
             if (skillTimer >= skillInterval) {
+                skillTimer = 0;
                 skillFrame++;
-                skillTimer -= skillInterval;
                 if (skillFrame >= skillFrames.length) {
-                    // Fin de animación
-                    skillFrames = null;
+                    skillFrames = null; // fin de animación
                     skillFrame = 0;
                 }
             }
-            return; // no procesamos movimiento mientras dura la animación
         }
 
         // --- Activar habilidad pendiente ---
         if (habilidadPendiente != null) {
             habilidadPendiente.activar();
-            skillFrames = habilidadPendiente.getFrames();
-            skillFrame = 0;
-            skillTimer = 0;
+            
+            BufferedImage[] frames = habilidadPendiente.getFrames();
+
             habilidadPendiente = null;
-            return; // arrancamos animación, posponemos movimiento
+            if (frames != null) {
+                this.skillFrames = frames;
+                this.skillFrame = 0;
+                this.skillTimer = 0;
+            }
         }
 
         if (estadoActual == EstadoPersonaje.BLOQUEANDO) {
@@ -246,19 +248,18 @@ public class Personaje extends ObjetoGrafico implements ObjetoGraficoMovible {
     @Override
     public void draw(Graphics2D g) {
         BufferedImage toDraw;
-        if (skillFrames != null) {
-            toDraw = skillFrames[skillFrame];
+        // Sprite del personaje según dirección
+        if (direccion == 1) {
+            toDraw = framesDr[animFrame];
         } else {
-            // Selección de frame según dirección
-            if (direccion == 1) {
-                toDraw = framesDr[animFrame];
-            } else {
-                toDraw = framesIzq[animFrame];
-            }
+            toDraw = framesIzq[animFrame];
         }
-        if (toDraw != null) {
-            g.drawImage(toDraw, (int) positionX, (int) positionY, null);
-        }
+        g.drawImage(toDraw, (int) positionX, (int) positionY, null);
+
+        // Dibujamos encima el efecto visual de habilidad (si hay)
+        if (skillFrames != null && skillFrames[skillFrame] != null) {
+            g.drawImage(skillFrames[skillFrame], (int) positionX, (int) positionY, null);
+        } 
     }
 
     public EstadoPersonaje getEstado() {

@@ -19,7 +19,6 @@ import com.entropyinteractive.Keyboard;
 import com.entropyinteractive.Log;
 import com.entropyinteractive.Mouse;
 
-import JuegoLemmings.Habilidad.Tipo;
 import Lanzador.Juego;
 import util.Configuracion;
 import util.Sonido;
@@ -240,7 +239,8 @@ public class Lemmings extends Juego {
 
         // Aqui cargo a los lemmings
         lemming = new ArrayList<>();
-        //Habilidad.cargarImagenes();
+        
+        Habilidad.cargarImagenes();
         
         // Cargo nivel actual, y ademas se carga el terreno
         cargarNivel(nivelActual);
@@ -248,17 +248,12 @@ public class Lemmings extends Juego {
         // Cargo el temporizador
         temp = new Temporizador(60); // 2 minutos
 
-        // Cargo las habilidades
-        Habilidad[] habilidad = new Habilidad[Habilidad.Tipo.values().length];
-        for (int i = 0; i < habilidad.length; i++) {
-            habilidad[i] = new Habilidad(Habilidad.Tipo.values()[i], null, terreno);
-        }
-
         // Cargo la barra de habilidades
         barra = new BarraHabilidad(ANCHO_PANTALLA, ALTO_PANTALLA);
 
         // Cargo el ranking
         ranking = new Ranking();
+       
 
     }
 

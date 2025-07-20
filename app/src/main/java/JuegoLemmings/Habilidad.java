@@ -5,24 +5,24 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 public class Habilidad {
-    
+
     public enum Tipo {
-        MINER,    // excava verticalmente hacia abajo
-        BUILDER,  // construye un escalón delante del lemming
-        FLOATER,  // (reducir velocidad de caída)
-        BLOCKER,  // invierte dirección y crea obstáculo (pared temporal)
-        CLIMBER,  // sube muros (trepa)
-        BOMBER,   // explota, destruye terreno alrededor y muere
-        BASHER,    // excava horizontalmente en la dirección actual
-        VELOX2,  // (velocidad doble)
-        NUKE  //Mueren TODOS
+        MINER, // excava verticalmente hacia abajo
+        BUILDER, // construye un escalón delante del lemming
+        FLOATER, // (reducir velocidad de caída)
+        BLOCKER, // invierte dirección y crea obstáculo (pared temporal)
+        CLIMBER, // sube muros (trepa)
+        BOMBER, // explota, destruye terreno alrededor y muere
+        BASHER, // excava horizontalmente en la dirección actual
+        VELOX2, // (velocidad doble)
+        NUKE // Mueren TODOS
     }
 
     private final Tipo tipo;
-    private final Personaje lemming;   // antes Lemming → ahora Personaje
+    private final Personaje lemming; // antes Lemming → ahora Personaje
     private final Terreno terreno;
     private static final int ICON_COUNT = 4;
-    //private  BufferedImage[] iconos; // Icono de la habilidad, si se necesita
+    // private BufferedImage[] iconos; // Icono de la habilidad, si se necesita
     private BufferedImage[] frames;
 
     private static BufferedImage[] miner;
@@ -35,23 +35,39 @@ public class Habilidad {
     private static BufferedImage[] nuke;
 
     public Habilidad(Tipo tipo, Personaje lemming, Terreno terreno) {
-        this.tipo    = tipo;
+        this.tipo = tipo;
         this.lemming = lemming;
         this.terreno = terreno;
         switch (tipo) {
-            case MINER:    this.frames = miner;    break;
-            case BUILDER:  this.frames = builder;  break;
-            case FLOATER:  this.frames = floater;  break;
-            case BLOCKER:  this.frames = blocker;  break;
-            case CLIMBER:  this.frames = climber;  break;
-            case BOMBER:   this.frames = bomber;   break;
-            case BASHER:   this.frames = basher;   break;
-            case NUKE:     this.frames = nuke;     break;
+            case MINER:
+                this.frames = miner;
+                break;
+            case BUILDER:
+                this.frames = builder;
+                break;
+            case FLOATER:
+                this.frames = floater;
+                break;
+            case BLOCKER:
+                this.frames = blocker;
+                break;
+            case CLIMBER:
+                this.frames = climber;
+                break;
+            case BOMBER:
+                this.frames = bomber;
+                break;
+            case BASHER:
+                this.frames = basher;
+                break;
+            case NUKE:
+                this.frames = nuke;
+                break;
         }
-        
+
     }
 
-    public static void cargarImagenes(){
+    public static void cargarImagenes() {
         try {
 
             miner = new BufferedImage[ICON_COUNT];
@@ -61,43 +77,46 @@ public class Habilidad {
             climber = new BufferedImage[ICON_COUNT];
             bomber = new BufferedImage[ICON_COUNT];
             basher = new BufferedImage[ICON_COUNT];
-            for (int i = 1; i <= ICON_COUNT; i++) {
+            nuke = new BufferedImage[ICON_COUNT];
+            for (int i = 0; i < ICON_COUNT; i++) {
+                int index = i + 1; // Para nombrar el archivo desde 1 (miner1.png, etc.)
                 miner[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/miner%d.png", i )));
+                        String.format("/Imagenes_Lemmings/miner%d.png", index)));
                 builder[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/builder%d.png", i )));
+                        String.format("/Imagenes_Lemmings/builder%d.png", index)));
                 floater[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/floater%d.png", i )));
+                        String.format("/Imagenes_Lemmings/floater%d.png", index)));
                 blocker[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/blocker%d.png", i )));
+                        String.format("/Imagenes_Lemmings/blocker%d.png", index)));
                 climber[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/climber%d.png", i )));
+                        String.format("/Imagenes_Lemmings/climber%d.png", index)));
                 bomber[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/bomber%d.png", i )));
+                        String.format("/Imagenes_Lemmings/bomber%d.png", index)));
                 basher[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/basher%d.png", i )));
+                        String.format("/Imagenes_Lemmings/basher%d.png", index)));
                 nuke[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/bomber%d.png", i )));
+                        String.format("/Imagenes_Lemmings/bomber%d.png", index)));
             }
 
-           
-
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Error al cargar las imágenes de iconos", e);
         }
     }
-    public void activar( ) {
+
+    
+    public void activar() {
         switch (tipo) {
             case MINER:
                 // Excava un túnel directamente debajo del lemming
-                terreno.miner( (int) lemming.getX(),(int) lemming.getY());
+                terreno.miner((int) lemming.getX(), (int) lemming.getY());
                 lemming.setEstado(Personaje.EstadoPersonaje.EXCAVANDO);
                 break;
 
             case BUILDER:
                 // coordenadas del pie del lemming
-                int xPie = (int)lemming.getX();
-                int yPie = (int)(lemming.getY() + lemming.getHeight_frame());
+                int xPie = (int) lemming.getX();
+                int yPie = (int) (lemming.getY() + lemming.getHeight_frame());
                 terreno.construirEscalon(xPie, yPie, lemming.getDireccion());
                 lemming.setEstado(Personaje.EstadoPersonaje.CAMINANDO);
                 break;
@@ -112,19 +131,20 @@ public class Habilidad {
 
             case BLOCKER:
                 // Invierte dirección instantáneamente y crea muro en su lugar
-                
-                terreno.pararse( (int) lemming.getX(),(int) lemming.getY());
+
+                terreno.pararse((int) lemming.getX(), (int) lemming.getY());
                 lemming.setEstado(Personaje.EstadoPersonaje.BLOQUEANDO);
                 break;
 
-            case CLIMBER:            // Habilita el modo trepar
+            case CLIMBER: // Habilita el modo trepar
                 lemming.enableClimb();
                 break;
 
             case BOMBER:
                 // Destruye terreno a su alrededor y luego “muere”
-                int xCentro = (int)lemming.getX() + Terreno.baldosa/2;
-                int yCentro = (int)lemming.getY() + Terreno.baldosa/2;;
+                int xCentro = (int) lemming.getX() + Terreno.baldosa / 2;
+                int yCentro = (int) lemming.getY() + Terreno.baldosa / 2;
+                ;
                 terreno.destruirExplosion(xCentro, yCentro);
                 lemming.morir();
                 break;
@@ -139,17 +159,15 @@ public class Habilidad {
                 lemming.setEstado(Personaje.EstadoPersonaje.VELOZ);
                 break;
 
-            case NUKE:   
-                 lemming.startNukeCONTADOR(5.0);
-            break;
+            case NUKE:
+                lemming.startNukeCONTADOR(5.0);
+                break;
             default:
                 lemming.setEstado(Personaje.EstadoPersonaje.CAMINANDO);
                 break;
         }
     }
 
-   
-    
     public BufferedImage[] getFrames() {
         return frames;
     }
