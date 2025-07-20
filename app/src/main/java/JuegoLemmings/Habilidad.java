@@ -32,7 +32,6 @@ public class Habilidad {
     private static BufferedImage[] climber;
     private static BufferedImage[] bomber;
     private static BufferedImage[] basher;
-    private static BufferedImage[] velox2;
     private static BufferedImage[] nuke;
 
     public Habilidad(Tipo tipo, Personaje lemming, Terreno terreno) {
@@ -47,7 +46,6 @@ public class Habilidad {
             case CLIMBER:  this.frames = climber;  break;
             case BOMBER:   this.frames = bomber;   break;
             case BASHER:   this.frames = basher;   break;
-            case VELOX2:   this.frames = velox2;   break;
             case NUKE:     this.frames = nuke;     break;
         }
         
@@ -78,10 +76,8 @@ public class Habilidad {
                     String.format("/Imagenes_Lemmings/bomber%d.png", i + 1)));
                 basher[i] = ImageIO.read(getClass().getResourceAsStream(
                     String.format("/Imagenes_Lemmings/basher%d.png", i + 1)));
-                velox2[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/velox2%d.png", i + 1)));
                 nuke[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/nuke%d.png", i + 1)));
+                    String.format("/Imagenes_Lemmings/bomber%d.png", i + 1)));
             }
 
            

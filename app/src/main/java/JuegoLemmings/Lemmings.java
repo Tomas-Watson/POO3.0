@@ -19,6 +19,7 @@ import com.entropyinteractive.Keyboard;
 import com.entropyinteractive.Log;
 import com.entropyinteractive.Mouse;
 
+import JuegoLemmings.Habilidad.Tipo;
 import Lanzador.Juego;
 import util.Configuracion;
 import util.Sonido;
@@ -64,8 +65,7 @@ public class Lemmings extends Juego {
     private ContadorLemmings contador;
 
     private int nivelActual = 0;
-    private final String[] archivosNivel = { "/archivos_txt/nivel1.txt", "/archivos_txt/nivel2.txt",
-            "/archivos_txt/nivel3.txt" };
+    private final String[] archivosNivel = { "/archivos_txt/nivel1.txt", "/archivos_txt/nivel2.txt","/archivos_txt/nivel3.txt" };
     // Un point representa una coordenada 2D
     private final Point[] salidaPosiciones = { new Point(13 * tileSize, 8 * tileSize),
             new Point(10 * tileSize, 8 * tileSize), new Point(12 * tileSize, 8 * tileSize) };
@@ -214,7 +214,7 @@ public class Lemmings extends Juego {
     @Override
     public void gameShutdown() {
 
-        Log.info(getClass().getSimpleName(), "Shutting down game");
+        Log.info(getClass().getSimpleName(), "Shutting down juego");
         Sonido.detenerMusica(musica);
     }
 
@@ -240,6 +240,7 @@ public class Lemmings extends Juego {
         // Aqui cargo a los lemmings
         lemming = new ArrayList<>();
 
+        
         // Cargo nivel actual, y ademas se carga el terreno
         cargarNivel(nivelActual);
 
