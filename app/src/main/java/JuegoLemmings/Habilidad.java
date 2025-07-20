@@ -32,7 +32,6 @@ public class Habilidad {
     private static BufferedImage[] climber;
     private static BufferedImage[] bomber;
     private static BufferedImage[] basher;
-    private static BufferedImage[] velox2;
     private static BufferedImage[] nuke;
 
     public Habilidad(Tipo tipo, Personaje lemming, Terreno terreno) {
@@ -47,13 +46,12 @@ public class Habilidad {
             case CLIMBER:  this.frames = climber;  break;
             case BOMBER:   this.frames = bomber;   break;
             case BASHER:   this.frames = basher;   break;
-            case VELOX2:   this.frames = velox2;   break;
             case NUKE:     this.frames = nuke;     break;
         }
         
     }
 
-    public void cargarImagenes(){
+    public static void cargarImagenes(){
         try {
 
             miner = new BufferedImage[ICON_COUNT];
@@ -64,24 +62,22 @@ public class Habilidad {
             bomber = new BufferedImage[ICON_COUNT];
             basher = new BufferedImage[ICON_COUNT];
             for (int i = 1; i <= ICON_COUNT; i++) {
-                miner[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/miner%d.png", i + 1)));
-                builder[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/builder%d.png", i + 1)));
-                floater[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/floater%d.png", i + 1)));
-                blocker[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/blocker%d.png", i + 1)));
-                climber[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/climber%d.png", i + 1)));
-                bomber[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/bomber%d.png", i + 1)));
-                basher[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/basher%d.png", i + 1)));
-                velox2[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/velox2%d.png", i + 1)));
-                nuke[i] = ImageIO.read(getClass().getResourceAsStream(
-                    String.format("/Imagenes_Lemmings/nuke%d.png", i + 1)));
+                miner[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
+                    String.format("/Imagenes_Lemmings/miner%d.png", i )));
+                builder[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
+                    String.format("/Imagenes_Lemmings/builder%d.png", i )));
+                floater[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
+                    String.format("/Imagenes_Lemmings/floater%d.png", i )));
+                blocker[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
+                    String.format("/Imagenes_Lemmings/blocker%d.png", i )));
+                climber[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
+                    String.format("/Imagenes_Lemmings/climber%d.png", i )));
+                bomber[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
+                    String.format("/Imagenes_Lemmings/bomber%d.png", i )));
+                basher[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
+                    String.format("/Imagenes_Lemmings/basher%d.png", i )));
+                nuke[i] = ImageIO.read(Habilidad.class.getResourceAsStream(
+                    String.format("/Imagenes_Lemmings/bomber%d.png", i )));
             }
 
            

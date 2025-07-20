@@ -31,10 +31,14 @@ public class Personaje extends ObjetoGrafico implements ObjetoGraficoMovible {
 
     public BufferedImage[] framesDr;   // Esto me permitira que el personaje camine hacia la derecha
     public BufferedImage[] framesIzq;  // Esto me permitira que el personaje camine hacia la izquierda
-
     public int animFrame = 0;
     public double animTimer = 0.0; // Es un acumulador de tiempo para pasar al siguiente frame
     public final double animInterval = 0.2; // Cada dos segundos se cambiara de frame
+    private BufferedImage[] skillFrames = null;
+    private int skillFrame = 0;
+    private double skillTimer = 0;
+    private final double skillInterval = 0.15;
+
 
     private Terreno terreno;
     private EstadoPersonaje estadoActual = EstadoPersonaje.CAMINANDO;
@@ -66,6 +70,8 @@ public class Personaje extends ObjetoGrafico implements ObjetoGraficoMovible {
             framesDr = new BufferedImage[] { Dr1, Dr2 }; // Ya cargo el arreglo con las imagenes
             framesIzq = new BufferedImage[] { Izq1, Izq2 };
 
+            
+
         } catch (IOException e) {
             throw new RuntimeException("Error al cargar las imagenes para los personajes", e);
         }
@@ -73,6 +79,30 @@ public class Personaje extends ObjetoGrafico implements ObjetoGraficoMovible {
 
     @Override
     public void moverse(double delta) {
+        // --- Animación de habilidad especial ---
+        if (skillFrames != null) {
+            skillTimer += delta;
+            if (skillTimer >= skillInterval) {
+                skillFrame++;
+                skillTimer -= skillInterval;
+                if (skillFrame >= skillFrames.length) {
+                    // Fin de animación
+                    skillFrames = null;
+                    skillFrame = 0;
+                }
+            }
+            return; // no procesamos movimiento mientras dura la animación
+        }
+
+        // --- Activar habilidad pendiente ---
+        if (habilidadPendiente != null) {
+            habilidadPendiente.activar();
+            skillFrames = habilidadPendiente.getFrames();
+            skillFrame = 0;
+            skillTimer = 0;
+            habilidadPendiente = null;
+            return; // arrancamos animación, posponemos movimiento
+        }
 
         if (estadoActual == EstadoPersonaje.BLOQUEANDO) {
             return;
@@ -87,10 +117,6 @@ public class Personaje extends ObjetoGrafico implements ObjetoGraficoMovible {
                 morir();
             }
             return;
-        }
-        if (habilidadPendiente != null) {
-            habilidadPendiente.activar();
-            habilidadPendiente = null;
         }
 
         // 1) Animación
@@ -219,15 +245,19 @@ public class Personaje extends ObjetoGrafico implements ObjetoGraficoMovible {
 
     @Override
     public void draw(Graphics2D g) {
-        BufferedImage currentFrame;
-        if (direccion == 1) { // si camina a la derecha
-            currentFrame = framesDr[animFrame];
-        } else { // si camina a la izquierda
-            currentFrame = framesIzq[animFrame];
+        BufferedImage toDraw;
+        if (skillFrames != null) {
+            toDraw = skillFrames[skillFrame];
+        } else {
+            // Selección de frame según dirección
+            if (direccion == 1) {
+                toDraw = framesDr[animFrame];
+            } else {
+                toDraw = framesIzq[animFrame];
+            }
         }
-
-        if (currentFrame != null) {
-            g.drawImage(currentFrame, (int) positionX, (int) positionY, null);
+        if (toDraw != null) {
+            g.drawImage(toDraw, (int) positionX, (int) positionY, null);
         }
     }
 
