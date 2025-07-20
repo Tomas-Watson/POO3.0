@@ -12,13 +12,13 @@ public class DetectorColisiones extends Rectangle {
         // Colisión de la pelota con los bordes
                 if (pelotita.getX() < 0 || pelotita.getX() + pelotita.getRadio() * 2 > ANCHO_PANTALLA) {
                         pelotita.rebotarHorizontal();
-                        if (Configuracion.get().sonidoActivado) {
+                        if (ConfiguracionPong.get().isSonidoActivado()) {
                                 Sonido.reproducirEfecto("musica/Rebote.wav");
                         }
                 }
                 if (pelotita.getY() < 30 || pelotita.getY() + pelotita.getRadio() * 2 > ALTO_PANTALLA) {
                         pelotita.rebotarVertical();
-                        if (Configuracion.get().sonidoActivado) {
+                        if (ConfiguracionPong.get().isSonidoActivado()) {
                                 Sonido.reproducirEfecto("musica/Rebote.wav");
                         }
                 }
