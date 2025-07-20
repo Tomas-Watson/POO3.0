@@ -274,7 +274,7 @@ public class Pong extends Juego{
     public void configuracionCerrada() {
         ventanaConfiguracionAbierta = false;
         enPausa = false;
-        //ventanaConfigGUI = null; // libera la referencia
+        ventanaConfigGUI = null; // libera la referencia
     }
 
 }
