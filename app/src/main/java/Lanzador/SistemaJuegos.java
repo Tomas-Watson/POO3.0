@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,7 +26,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
     private Thread hiloJuego;
     private JFrame ventana;
 
-    public SistemaJuegos(){
+    public SistemaJuegos() {
         ventana = new JFrame("Lanzador de Juegos");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setSize(500, 400);
@@ -34,7 +35,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         ventana.setVisible(true);
     }
 
-    private void mostrarMenuPrincipal(){
+    private void mostrarMenuPrincipal() {
         // Panel del fondo personalizado que escala la imagen
         ImageIcon fondo = new ImageIcon(getClass().getResource("/ImagenesLanzador/FondoLanzador.jpg"));
         JLabel labelFondo = new JLabel(fondo);
@@ -45,7 +46,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
         panelBotones.setOpaque(false); // Para que el fondo sea transparente
 
-        for(String nombre: new String[]{"JuegoPong", "Lemmings"}){
+        for (String nombre : new String[] { "JuegoPong", "Lemmings" }) {
             JButton boton = new JButton(nombre);
             boton.setFont(new Font("Arial", Font.BOLD, 18));
             boton.setPreferredSize(new Dimension(180, 50));
@@ -62,8 +63,8 @@ public class SistemaJuegos extends JPanel implements ActionListener {
     private void mostrarMenuJuego(String juego) {
         // Elegimos la imagen de fondo según el juego
         String rutaFondo = juego.equals("JuegoPong")
-            ? "/ImagenesPong/PortadaPong.png"
-            : "/Imagenes_Lemmings/PortadaLemmings.jpg";
+                ? "/ImagenesPong/PortadaPong.png"
+                : "/Imagenes_Lemmings/PortadaLemmings.jpg";
 
         ImageIcon iconoFondo = new ImageIcon(getClass().getResource(rutaFondo));
         JPanel panelFondo = new JPanel() {
@@ -95,9 +96,46 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         btnRanking.setFont(new Font("Arial", Font.PLAIN, 18));
         btnRanking.setMaximumSize(new Dimension(200, 40));
         btnRanking.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrado horizontalmente
-        btnRanking.addActionListener(e ->JOptionPane.showMessageDialog(ventana,
-        "Aquí iría el ranking de " + juego,
-        "Ranking", JOptionPane.INFORMATION_MESSAGE)); // Mostrar mensaje de ranking
+        btnRanking.addActionListener(e -> {
+            if ("Lemmings".equals(juego)) {
+                // Asegurémonos de que ya haya jugado al menos una partida
+                if (juegoActual instanceof JuegoLemmings.Lemmings) {
+                    JuegoLemmings.Lemmings lem = (JuegoLemmings.Lemmings) juegoActual;
+                    List<JuegoLemmings.Jugador> top = lem.getRanking().getTop5();
+                    if (top.isEmpty()) {
+                        JOptionPane.showMessageDialog(ventana,
+                                "Aún no hay puntuaciones. ¡Juga primero!",
+                                "Ranking Lemmings",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        StringBuilder sb = new StringBuilder("🏆 TOP 5 LEMMINGS 🏆\n\n");
+                        int pos = 1;
+                        for (JuegoLemmings.Jugador j : top) {
+                            long min = j.getTiempoSegundos() / 60;
+                            long seg = j.getTiempoSegundos() % 60;
+                            sb.append(String.format("%d. %s – %02d:%02d – %d salvados\n",
+                                    pos++, j.getNombre(), min, seg, j.getLemmingsSalvados()));
+                        }
+                        JOptionPane.showMessageDialog(ventana,
+                                sb.toString(),
+                                "Ranking Lemmings",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    // Si todavía no iniciaste ningún juego, mensaje genérico
+                    JOptionPane.showMessageDialog(ventana,
+                            "No hay ranking disponible. Jugá primero a Lemmings.",
+                            "Ranking Lemmings",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                // Para otros juegos (pong, etc.)
+                JOptionPane.showMessageDialog(ventana,
+                        "Aquí iría el ranking de " + juego,
+                        "Ranking",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        }); // Mostrar mensaje de ranking
 
         // Botón Volver
         JButton btnVolver = new JButton("← Volver");
@@ -110,7 +148,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         panelFondo.add(titulo);
         panelFondo.add(Box.createRigidArea(new Dimension(0, 30))); // Espacio entre título y botones
         panelFondo.add(btnJugar);
-        panelFondo.add(Box.createRigidArea(new Dimension(0, 20)));  // Espacio entre botones
+        panelFondo.add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre botones
         panelFondo.add(btnRanking);
         panelFondo.add(Box.createVerticalGlue()); // Para empujar los botones hacia arriba
         panelFondo.add(btnVolver);
@@ -120,9 +158,6 @@ public class SistemaJuegos extends JPanel implements ActionListener {
     }
 
     private void iniciarJuego(String juego) {
-
-
-        // Igual a tu lógica anterior: lanza el juego en un hilo
         switch (juego) {
             case "JuegoPong":
                 juegoActual = new pong.Pong();
@@ -131,7 +166,10 @@ public class SistemaJuegos extends JPanel implements ActionListener {
                 juegoActual = new JuegoLemmings.Lemmings();
                 break;
         }
-        hiloJuego = new Thread(() -> juegoActual.run(1.0/60.0));
+        hiloJuego = new Thread(() -> {
+            juegoActual.run(1.0 / 60.0);
+            SwingUtilities.invokeLater(this::mostrarMenuPrincipal);
+        });
         hiloJuego.start();
     }
 

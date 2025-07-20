@@ -43,6 +43,7 @@ public class Ranking {
         return jugadores;
     }
 
+    
     public void draw(Graphics2D g, int panelWidth) {
         // Fondo semi-transparente
         g.setColor(new Color(0, 0, 0, 180));
