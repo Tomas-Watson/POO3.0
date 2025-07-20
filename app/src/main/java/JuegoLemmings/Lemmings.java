@@ -76,6 +76,7 @@ public class Lemmings extends Juego {
     private final Random random = new Random();
 
     // Para la barra de habilidades
+    private Habilidad[] habilidad;
     private BarraHabilidad barra;
     private int habilidadActual = -1;
 
@@ -239,7 +240,7 @@ public class Lemmings extends Juego {
 
         // Aqui cargo a los lemmings
         lemming = new ArrayList<>();
-
+        //Habilidad.cargarImagenes();
         
         // Cargo nivel actual, y ademas se carga el terreno
         cargarNivel(nivelActual);
