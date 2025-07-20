@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 import javax.sound.sampled.Clip;
+import javax.swing.SwingUtilities;
 
 import com.entropyinteractive.Keyboard;
 import com.entropyinteractive.Log;
@@ -20,6 +21,7 @@ public class Pong extends Juego{
     
     private final static int ANCHO_PANTALLA = 800;
     private final static int ALTO_PANTALLA = 600;	
+
     private Pelota pelota;
     private Paleta p1;
     private Paleta p2;
@@ -30,11 +32,15 @@ public class Pong extends Juego{
     private boolean pPresionado = false;
     private boolean qPresionado = false;
     private boolean ePresionado = false;
-    private boolean enterPresionado = false;
+    private boolean rPresionada = false;
     final double velocidad = 400;
+    
     private Clip musica;
     private boolean victoriaSonada = false;
 
+    private ConfiguracionPong config;
+    private boolean ventanaConfiguracionAbierta = false;
+    private ConfiguracionPongGUI ventanaConfigGUI;
 
 
     public Pong(){
@@ -46,8 +52,8 @@ public class Pong extends Juego{
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
 
         // Música de fondo
-        if (Configuracion.get().musicaActivada) {
-            musica = Sonido.reproducirMusica("musica/" + Configuracion.get().pistaMusical + ".wav");
+        if (ConfiguracionPong.get().musicaActivada) {
+            musica = Sonido.reproducirMusica("musica/" + ConfiguracionPong.get().pistaMusical + ".wav");
         }
 
         //Creo las paletas
@@ -116,7 +122,7 @@ public class Pong extends Juego{
 
         if (!finJuego) {
            
-            // Pausar/reanudar el juego con 'P'
+            // Pausar/reanudar el juego with 'P'
             if (keyboard.isKeyPressed(KeyEvent.VK_P)) {
                 if (!pPresionado) {
                     enPausa = !enPausa;
@@ -124,6 +130,17 @@ public class Pong extends Juego{
                 }
             } else {
                 pPresionado = false;
+            }
+
+            if (keyboard.isKeyPressed(KeyEvent.VK_C)) {
+                if (!ventanaConfiguracionAbierta) {
+                    ventanaConfiguracionAbierta = true;
+                    enPausa = true;
+
+                    SwingUtilities.invokeLater(() -> {
+                        ventanaConfigGUI = new ConfiguracionPongGUI(this); // Pasás referencia al juego
+                    });
+                }
             }
 
             if (keyboard.isKeyPressed(KeyEvent.VK_Q)) {
@@ -139,13 +156,13 @@ public class Pong extends Juego{
             // Toggle música
             if (keyboard.isKeyPressed(KeyEvent.VK_E)) {
                 if (!ePresionado) {
-                    Configuracion.get().musicaActivada = !Configuracion.get().musicaActivada;
-                    System.out.println("Música: " + (Configuracion.get().musicaActivada ? "ON" : "OFF"));
+                    ConfiguracionPong.get().musicaActivada = !ConfiguracionPong.get().musicaActivada;
+                    System.out.println("Música: " + (ConfiguracionPong.get().musicaActivada ? "ON" : "OFF"));
 
-                    if (!Configuracion.get().musicaActivada) {
+                    if (!ConfiguracionPong.get().musicaActivada) {
                         Sonido.detenerMusica(musica);
                     } else {
-                        musica = Sonido.reproducirMusica("musica/" + Configuracion.get().pistaMusical + ".wav");
+                        musica = Sonido.reproducirMusica("musica/" + ConfiguracionPong.get().pistaMusical + ".wav");
                     }
 
                     ePresionado = true;
@@ -155,31 +172,33 @@ public class Pong extends Juego{
             }
 
             // Reiniciar el juego con 'Enter'
-            if (keyboard.isKeyPressed(KeyEvent.VK_ENTER)) {
-                if (!enterPresionado) {
+            if (keyboard.isKeyPressed(KeyEvent.VK_R)) {
+                if (!rPresionada) {
                     reiniciarJuego();
-                    enterPresionado = true;
+                    reiniciarPosiciones();
+                    rPresionada = true;
                 }
             } else {
-                enterPresionado = false;
+                rPresionada = false;
             }
 
             if (!enPausa) {
-                // Movimiento paleta 1
-                if (keyboard.isKeyPressed(KeyEvent.VK_UP)) {
-                    p1.setY(p1.getY() - velocidad * delta);
-                    //System.out.println("Se movio arriba ");
-                }
-                if (keyboard.isKeyPressed(KeyEvent.VK_DOWN)) {
-                    p1.setY(p1.getY() + velocidad * delta);
-                    //System.out.println("Se movio abajo");
-                }
+                // Mover las paletas con las teclas configuradas
+                int j1Up = ConfiguracionPong.get().teclas.get("J1_UP");
+                int j1Down = ConfiguracionPong.get().teclas.get("J1_DOWN");
+                int j2Up = ConfiguracionPong.get().teclas.get("J2_UP");
+                int j2Down = ConfiguracionPong.get().teclas.get("J2_DOWN");
 
-                // Movimiento paleta 2 (opcional: puedes usar W/S para el jugador 2)
-                if (keyboard.isKeyPressed(KeyEvent.VK_W)) {
+                if (keyboard.isKeyPressed(j1Up)) {
+                    p1.setY(p1.getY() - velocidad * delta);
+                }
+                if (keyboard.isKeyPressed(j1Down)) {
+                    p1.setY(p1.getY() + velocidad * delta);
+                }
+                if (keyboard.isKeyPressed(j2Up)) {
                     p2.setY(p2.getY() - velocidad * delta);
                 }
-                if (keyboard.isKeyPressed(KeyEvent.VK_S)) {
+                if (keyboard.isKeyPressed(j2Down)) {
                     p2.setY(p2.getY() + velocidad * delta);
                 }
 
@@ -204,7 +223,7 @@ public class Pong extends Juego{
                 }
 
                 if (contador.getGanador() != null) {
-                    if (!victoriaSonada && Configuracion.get().sonidoActivado) {
+                    if (!victoriaSonada && ConfiguracionPong.get().sonidoActivado) {
                         Sonido.reproducirEfecto("musica/victoria.wav"); // asegúrate de tener ese archivo
                         Sonido.detenerMusica(musica);
                         victoriaSonada = true;
@@ -250,6 +269,12 @@ public class Pong extends Juego{
         if (p2.getY() + p2.getAlto() > ALTO_PANTALLA - PADDING_BOTTOM) {
             p2.setY(ALTO_PANTALLA - PADDING_BOTTOM - p2.getAlto());
         }
+    }
+
+    public void configuracionCerrada() {
+        ventanaConfiguracionAbierta = false;
+        enPausa = false;
+        //ventanaConfigGUI = null; // libera la referencia
     }
 
 }
