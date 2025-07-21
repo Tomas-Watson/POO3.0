@@ -20,7 +20,6 @@ import com.entropyinteractive.Log;
 import com.entropyinteractive.Mouse;
 
 import Lanzador.Juego;
-import pong.ConfiguracionPong;
 import util.Sonido;
 
 public class Lemmings extends Juego {
@@ -226,7 +225,7 @@ public class Lemmings extends Juego {
     @Override
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
-        ConfiguracionLemmings config = ConfiguracionLemmings.get();
+        this.config = ConfiguracionLemmings.get();
 
         // Música de fondo
         if (config.isMusicaActivada()) {
@@ -336,6 +335,9 @@ public class Lemmings extends Juego {
 
                     if (!p.estaVivo()) {
                         it.remove();
+                        if (config.isSonidoActivado()) {
+                            Sonido.reproducirEfecto("musica/musicLemming/sound/die.wav");
+                        }
                         continue;
                     }
 
@@ -356,7 +358,7 @@ public class Lemmings extends Juego {
                             contador.incrementar();
                         }
                         it.remove();
-
+                        
                         if (config.isSonidoActivado()) {
                             Sonido.reproducirEfecto("musica/musicLemming/sound/LemmingSalvado.wav");
                         }
@@ -373,7 +375,9 @@ public class Lemmings extends Juego {
                     // un cartel de perdiste
                     if (px + anchoSprite < 0 || px > ANCHO_PANTALLA || py + altoSprite < 0 || py > ALTO_PANTALLA) {
                         it.remove();
-                        
+                        if (config.isSonidoActivado()) {
+                            Sonido.reproducirEfecto("musica/musicLemming/sound/die.wav");
+                        }
                         continue; // pasamos al siguiente lemming
                     }
                 }
@@ -403,6 +407,10 @@ public class Lemmings extends Juego {
                     if (sel >= 0) {
 
                         habilidadActual = sel;
+
+                        if (config.isSonidoActivado()) {
+                            Sonido.reproducirEfecto("musica/musicLemming/sound/mousepre.wav");
+                        }
 
                         personajeSeleccionado = null; // deselecciona visualmente
                         Habilidad.Tipo tipoSel = Habilidad.Tipo.values()[sel];
@@ -448,6 +456,9 @@ public class Lemmings extends Juego {
                             // asignar sólo al lemming clicado
                             Habilidad hab = new Habilidad(Habilidad.Tipo.values()[habilidadActual], clicado, terreno);
                             clicado.setHabilidadPendiente(hab);
+                            if (config.isSonidoActivado()) {
+                                Sonido.reproducirEfecto("musica/musicLemming/sound/skill_add.wav");
+                            }
                             personajeSeleccionado = null;
                         }
                     }
@@ -476,14 +487,17 @@ public class Lemmings extends Juego {
                 finJuego = true;
             }
 
-            if (config.isSonidoActivado()) {
-                Sonido.reproducirEfecto("musica/musicLemming/Victoria.wav");
-            }
+            
         }
 
         // Si se llego al ultimo nivel y se logra pasarlo con exito, debo presionar
         // ENTER y se deberia mostrar un cartel
         if (finJuego && !rankingGuardado) {
+            
+
+            if (config.isSonidoActivado()) {
+                Sonido.reproducirEfecto("musica/musicLemming/Victoria.wav");
+            }
 
             String nombre = JOptionPane.showInputDialog(null, "¡Ganaste! Ingresá tu nombre:");
             if (nombre != null && !nombre.trim().isEmpty()) {
@@ -517,7 +531,7 @@ public class Lemmings extends Juego {
         // Tras una derrota, le doy la opcion al usuario de reiniciar con R o salir con
         // ESC
         if (gameOver) {
-            if (!victoriaSonada && ConfiguracionPong.get().isSonidoActivado()) {
+            if (!victoriaSonada && ConfiguracionLemmings.get().isSonidoActivado()) {
                 Sonido.reproducirEfecto("musica/musicLemming/sound/derrota.wav");
                 Sonido.detenerMusica(musica);
                 victoriaSonada = true;

@@ -1,6 +1,5 @@
 package util;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -14,14 +13,20 @@ public class Sonido {
     public static void reproducirEfecto(String path) {
         new Thread(() -> {
             try {
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(new File(path));
+                URL url = Sonido.class.getClassLoader().getResource(path);
+                if (url == null) {
+                    System.err.println("No se encontró el sonido: " + path);
+                    return;
+                }
+
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(url);
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInput);
                 clip.start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }).start(); // ¡se reproduce en otro hilo!
+        }).start();
     }
 
     public static Clip reproducirMusica(String archivo) {
