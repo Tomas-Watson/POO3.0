@@ -3,16 +3,26 @@ package JuegoLemmings;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class Ranking {
+public class Ranking implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private static final String FILE_PATH = "ranking.dat";
 
     private List<Jugador> jugadores;
 
     public Ranking() {
         jugadores = new ArrayList<>();
+        cargarDesdeArchivo();
     }
 
     public void agregarJugador(Jugador jugador) {
@@ -21,6 +31,7 @@ public class Ranking {
         if (jugadores.size() > 5) {
             jugadores = jugadores.subList(0, 5); // mantener top 5
         }
+        guardarEnArchivo();
     }
 
     public List<Jugador> getTop5() {
@@ -42,6 +53,33 @@ public class Ranking {
     public List<Jugador> getTodos() {
         return jugadores;
     }
+
+    private void guardarEnArchivo() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(
+                new FileOutputStream(FILE_PATH))) {
+            oos.writeObject(jugadores);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    @SuppressWarnings("unchecked")
+    private void cargarDesdeArchivo() {
+        File f = new File(FILE_PATH);
+        if (!f.exists()) return;
+        try (ObjectInputStream ois = new ObjectInputStream(
+                new FileInputStream(f))) {
+            jugadores = (List<Jugador>) ois.readObject();
+            ordenar();
+            if (jugadores.size() > 5) {
+                jugadores = new ArrayList<>(jugadores.subList(0,5));
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     
     public void draw(Graphics2D g, int panelWidth) {

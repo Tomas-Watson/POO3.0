@@ -512,6 +512,7 @@ public class Lemmings extends Juego {
 
             if (keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)) {
                 rankingGuardado = true; 
+                stop(); //detiene el bucle del juego y me lleva a SistemaJuego
                 return; 
             }
             return;
