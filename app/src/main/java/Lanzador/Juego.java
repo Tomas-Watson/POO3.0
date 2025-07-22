@@ -6,30 +6,45 @@ import com.entropyinteractive.JGame;
 
 public abstract class Juego extends JGame {
 
-    public Juego() {
-        super("Juego Lemmings", 800, 600);
+    protected boolean shouldStop = false;
 
-        
+    public Juego() {
+        super("Juegos POO", 800, 600);
     }
 
     @Override
     public void gameStartup() {
-        throw new UnsupportedOperationException("Not supported yet.");
+
     }
 
     @Override
     public void gameUpdate(double d) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
     }
 
     @Override
     public void gameDraw(Graphics2D gd) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
     }
 
     @Override
     public void gameShutdown() {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    }
+
+    public void detenerJuego() {
+        shouldStop = true;
+    }
+
+    @Override
+    public void run(double dt) {
+        gameStartup();
+
+        while (!shouldStop) {
+            gameUpdate(dt); // update and draw
+        }
+
+        gameShutdown(); // se detiene la música automáticamente aquí
     }
 
 }
