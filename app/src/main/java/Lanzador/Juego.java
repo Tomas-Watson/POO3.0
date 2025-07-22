@@ -6,7 +6,6 @@ import com.entropyinteractive.JGame;
 
 public abstract class Juego extends JGame {
 
-    protected boolean shouldStop = false;
 
     public Juego() {
         super("Juegos POO", 800, 600);
@@ -30,21 +29,6 @@ public abstract class Juego extends JGame {
     @Override
     public void gameShutdown() {
 
-    }
-
-    public void detenerJuego() {
-        shouldStop = true;
-    }
-
-    @Override
-    public void run(double dt) {
-        gameStartup();
-
-        while (!shouldStop) {
-            gameUpdate(dt); // update and draw
-        }
-
-        gameShutdown(); // se detiene la música automáticamente aquí
     }
 
 }
