@@ -63,7 +63,8 @@ public class Lemmings extends Juego {
     private ContadorLemmings contador;
 
     private int nivelActual = 0;
-    private final String[] archivosNivel = { "/archivos_txt/nivel1.txt", "/archivos_txt/nivel2.txt","/archivos_txt/nivel3.txt" };
+    private final String[] archivosNivel = { "/archivos_txt/nivel1.txt", "/archivos_txt/nivel2.txt",
+            "/archivos_txt/nivel3.txt" };
     // Un point representa una coordenada 2D
     private final Point[] salidaPosiciones = { new Point(13 * tileSize, 8 * tileSize),
             new Point(10 * tileSize, 8 * tileSize), new Point(12 * tileSize, 8 * tileSize) };
@@ -93,6 +94,8 @@ public class Lemmings extends Juego {
 
     private ConfiguracionLemmings config;
     private Sonido sonido;
+
+    private boolean solicitarSalida = false;
 
     public Lemmings() {
         // super("Lemmings", ANCHO_PANTALLA, ALTO_PANTALLA);
@@ -239,9 +242,9 @@ public class Lemmings extends Juego {
 
         // Aqui cargo a los lemmings
         lemming = new ArrayList<>();
-        
+
         Habilidad.cargarImagenes();
-        
+
         // Cargo nivel actual, y ademas se carga el terreno
         cargarNivel(nivelActual);
         if (config.isMusicaActivada()) {
@@ -256,7 +259,6 @@ public class Lemmings extends Juego {
 
         // Cargo el ranking
         ranking = new Ranking();
-       
 
     }
 
@@ -349,14 +351,15 @@ public class Lemmings extends Juego {
                     int sx = (int) salida.getX(); // Tomo la posicion en X de la salida
                     int sy = (int) salida.getY(); // Tomo la posicion en Y de la salida
 
-                    boolean colisionSalida = px + anchoSprite > sx && px < sx + tileSize && py + altoSprite > sy && py < sy + tileSize;
+                    boolean colisionSalida = px + anchoSprite > sx && px < sx + tileSize && py + altoSprite > sy
+                            && py < sy + tileSize;
                     // El boolean colisionSalida por defecto retorna TRUE
                     if (colisionSalida) {
                         if (contador.getTotalSalvados() < lemmingsNecesario) {
                             contador.incrementar();
                         }
                         it.remove();
-                        
+
                         if (config.isSonidoActivado()) {
                             Sonido.reproducirEfecto("musica/musicLemming/sound/LemmingSalvado.wav");
                         }
@@ -434,7 +437,7 @@ public class Lemmings extends Juego {
                         // Verifica si se hizo click sobre un personaje
                         Personaje clicado = null;
                         final int PAD = 8;
-                        
+
                         for (Personaje p : lemming) {
                             int px = (int) p.getX();
                             int py = (int) p.getY();
@@ -458,6 +461,10 @@ public class Lemmings extends Juego {
                                 Sonido.reproducirEfecto("musica/musicLemming/sound/skill_add.wav");
                             }
                             personajeSeleccionado = null;
+                        }
+
+                        if (solicitarSalida) {
+                            stop(); // Detiene el bucle principal del juego
                         }
                     }
                 }
@@ -485,13 +492,12 @@ public class Lemmings extends Juego {
                 finJuego = true;
             }
 
-            
         }
 
         // Si se llego al ultimo nivel y se logra pasarlo con exito, debo presionar
         // ENTER y se deberia mostrar un cartel
         if (finJuego && !rankingGuardado) {
-            
+
             if (config.isSonidoActivado()) {
                 Sonido.reproducirEfecto("musica/musicLemming/Victoria.wav");
             }
@@ -508,8 +514,7 @@ public class Lemmings extends Juego {
             }
 
             if (keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)) {
-                rankingGuardado = true; 
-                return; 
+                solicitarSalida = true;
             }
             return;
         }
