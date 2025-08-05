@@ -514,7 +514,8 @@ public class Lemmings extends Juego {
             }
 
             if (keyboard.isKeyPressed(KeyEvent.VK_ESCAPE)) {
-                solicitarSalida = true;
+                rankingGuardado = true; 
+                return; 
             }
             return;
         }
