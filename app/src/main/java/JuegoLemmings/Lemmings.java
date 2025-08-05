@@ -492,7 +492,6 @@ public class Lemmings extends Juego {
         // ENTER y se deberia mostrar un cartel
         if (finJuego && !rankingGuardado) {
             
-
             if (config.isSonidoActivado()) {
                 Sonido.reproducirEfecto("musica/musicLemming/Victoria.wav");
             }

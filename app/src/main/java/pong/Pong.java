@@ -138,6 +138,7 @@ public class Pong extends Juego{
                     ventanaConfiguracionAbierta = true;
                     enPausa = true;
 
+
                     SwingUtilities.invokeLater(() -> {
                         ventanaConfigGUI = new ConfiguracionPongGUI(this); // Pasás referencia al juego
                     });

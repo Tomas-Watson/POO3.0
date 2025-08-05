@@ -31,7 +31,7 @@ public class ConfiguracionPongGUI extends JFrame {
         this.juego = juego;
         setTitle("Configuración de Teclas - Pong");
         setSize(400, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // NUEVO: Layout principal vertical
@@ -71,8 +71,9 @@ public class ConfiguracionPongGUI extends JFrame {
         add(panelBotones, BorderLayout.SOUTH);
 
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
-                cerrarVentana();
+                cerrarVentana(); // Llama a tu método personalizado
             }
         });
 
