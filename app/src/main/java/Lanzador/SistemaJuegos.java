@@ -9,7 +9,12 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -26,6 +31,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
     private Juego juegoActual;
     private Thread hiloJuego;
     private JFrame ventana;
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public SistemaJuegos() {
         ventana = new JFrame("Lanzador de Juegos");
@@ -34,6 +40,27 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         ventana.setLocationRelativeTo(null);
         mostrarMenuPrincipal();
         ventana.setVisible(true);
+
+        Path archivo = Paths.get("ruta/a/tu/archivo.txt");
+        long[] ultimaModif = { archivo.toFile().lastModified() };
+
+        scheduler.scheduleAtFixedRate(() -> {
+            long modif = archivo.toFile().lastModified();
+            if (modif != ultimaModif[0]) {
+                ultimaModif[0] = modif;
+                SwingUtilities.invokeLater(() -> {
+                    ventana.setVisible(true);
+                    JOptionPane.showMessageDialog(ventana, "¡El archivo fue modificado!");
+                });
+            }
+        }, 2, 2, TimeUnit.SECONDS);
+
+        ventana.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                cerrarYSalir();
+            }
+        });
     }
 
     private void mostrarMenuPrincipal() {
@@ -162,12 +189,6 @@ public class SistemaJuegos extends JPanel implements ActionListener {
                             "Ranking Lemmings",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
-            } else {
-                // Para otros juegos (pong, etc.)
-                JOptionPane.showMessageDialog(ventana,
-                        "Aquí iría el ranking de " + juego,
-                        "Ranking",
-                        JOptionPane.INFORMATION_MESSAGE);
             }
         }); // Mostrar mensaje de ranking
 
@@ -201,7 +222,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
                 break;
         }
         ventana.setVisible(false);
-        
+
         hiloJuego = new Thread(() -> {
             juegoActual.run(1.0 / 60.0);
             SwingUtilities.invokeLater(() -> {
@@ -209,8 +230,15 @@ public class SistemaJuegos extends JPanel implements ActionListener {
                 ventana.setVisible(true);
             });
         });
-        
+
         hiloJuego.start();
+    }
+
+    private void cerrarYSalir() {
+        if (!scheduler.isShutdown()) {
+            scheduler.shutdownNow();
+        }
+        System.exit(0); // Finaliza todo
     }
 
     @Override
