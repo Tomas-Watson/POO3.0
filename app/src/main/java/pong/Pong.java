@@ -234,6 +234,8 @@ public class Pong extends Juego{
                     finJuego = true;
                 }
 
+                
+
                 DetectorColisiones.colisionPelotaContraBordesSupInf(pelota);
             }
         }

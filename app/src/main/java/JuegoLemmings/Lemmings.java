@@ -227,11 +227,6 @@ public class Lemmings extends Juego {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
         this.config = ConfiguracionLemmings.get();
 
-        // Música de fondo
-        if (config.isMusicaActivada()) {
-            musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
-        }
-
         int colEntrada = 2;
         int filaEntrada = 1;
 
@@ -249,6 +244,9 @@ public class Lemmings extends Juego {
         
         // Cargo nivel actual, y ademas se carga el terreno
         cargarNivel(nivelActual);
+        if (config.isMusicaActivada()) {
+            musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
+        }
 
         // Cargo el temporizador
         temp = new Temporizador(60); // 2 minutos

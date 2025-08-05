@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -43,26 +44,59 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         ventana.setContentPane(labelFondo);
 
         // Panel para los botones en la parte inferior
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
-        panelBotones.setOpaque(false); // Para que el fondo sea transparente
+        JPanel panelCentral = new JPanel();
+        panelCentral.setOpaque(false);
+        panelCentral.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 30)); // Espacio entre tarjetas
 
-        for (String nombre : new String[] { "JuegoPong", "Lemmings" }) {
-            JButton boton = new JButton(nombre);
-            boton.setFont(new Font("Arial", Font.BOLD, 18));
-            boton.setPreferredSize(new Dimension(180, 50));
-            boton.addActionListener(this);
-            panelBotones.add(boton);
-        }
+        // Tarjetas para cada juego
+        panelCentral.add(crearTarjetaJuego("Pong2D", "/ImagenesLanzador/PortadaPong.png"));
+        panelCentral.add(crearTarjetaJuego("Lemmings", "/ImagenesLanzador/PortadaLemmings2.png"));
 
-        labelFondo.add(panelBotones, BorderLayout.SOUTH); // Agrega los botones abajo
+        labelFondo.add(panelCentral, BorderLayout.CENTER);
 
         ventana.revalidate();
         ventana.repaint();
     }
 
+    private JPanel crearTarjetaJuego(String nombreJuego, String rutaImagen) {
+        JPanel tarjeta = new JPanel();
+        tarjeta.setLayout(new BoxLayout(tarjeta, BoxLayout.Y_AXIS));
+        tarjeta.setOpaque(false);
+        tarjeta.setPreferredSize(new Dimension(200, 300));
+
+        // Título (opcional)
+        JLabel titulo = new JLabel(nombreJuego);
+        titulo.setFont(new Font("Arial", Font.BOLD, 16));
+        titulo.setForeground(Color.WHITE);
+        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Imagen del juego
+        ImageIcon icono = new ImageIcon(getClass().getResource(rutaImagen));
+        Image imagenEscalada = icono.getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH);
+        JLabel labelImagen = new JLabel(new ImageIcon(imagenEscalada));
+        labelImagen.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Botón “Jugar”
+        JButton btnJugar = new JButton("Jugar");
+        btnJugar.setFont(new Font("Arial", Font.BOLD, 16));
+        btnJugar.setMaximumSize(new Dimension(180, 35));
+        btnJugar.setPreferredSize(new Dimension(180, 35));
+        btnJugar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnJugar.setFocusPainted(false);
+        btnJugar.addActionListener(e -> mostrarMenuJuego(nombreJuego));
+
+        tarjeta.add(titulo);
+        tarjeta.add(Box.createRigidArea(new Dimension(0, 10)));
+        tarjeta.add(labelImagen);
+        tarjeta.add(Box.createRigidArea(new Dimension(0, 5)));
+        tarjeta.add(btnJugar);
+
+        return tarjeta;
+    }
+
     private void mostrarMenuJuego(String juego) {
         // Elegimos la imagen de fondo según el juego
-        String rutaFondo = juego.equals("JuegoPong")
+        String rutaFondo = juego.equals("Pong2D")
                 ? "/ImagenesPong/PortadaPong.png"
                 : "/Imagenes_Lemmings/PortadaLemmings.jpg";
 
@@ -159,17 +193,23 @@ public class SistemaJuegos extends JPanel implements ActionListener {
 
     private void iniciarJuego(String juego) {
         switch (juego) {
-            case "JuegoPong":
+            case "Pong2D":
                 juegoActual = new pong.Pong();
                 break;
             case "Lemmings":
                 juegoActual = new JuegoLemmings.Lemmings();
                 break;
         }
+        ventana.setVisible(false);
+        
         hiloJuego = new Thread(() -> {
             juegoActual.run(1.0 / 60.0);
-            SwingUtilities.invokeLater(this::mostrarMenuPrincipal);
+            SwingUtilities.invokeLater(() -> {
+                mostrarMenuPrincipal();
+                ventana.setVisible(true);
+            });
         });
+        
         hiloJuego.start();
     }
 
