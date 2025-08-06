@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ConfiguracionLemmings {
     
-    private static ConfiguracionLemmings instancia;
+    private ConfiguracionLemmings instancia;
 
     private boolean sonidoActivado;
     private boolean musicaActivada;
@@ -16,11 +16,11 @@ public class ConfiguracionLemmings {
     //Es como un diccionario: cada clave tiene asociado un valor 
     private Map<String, Integer> teclas;
 
-    private ConfiguracionLemmings() {
+    public ConfiguracionLemmings() {
         cargarPredeterminadas();
     }
 
-    public static ConfiguracionLemmings get() {
+    public ConfiguracionLemmings get() {
         if (instancia == null) {
             instancia = new ConfiguracionLemmings();
         }
@@ -40,6 +40,7 @@ public class ConfiguracionLemmings {
         teclas.put("EFECTO", KeyEvent.VK_Q);
         teclas.put("MUSICA", KeyEvent.VK_E);
         teclas.put("PAUSA", KeyEvent.VK_SPACE);
+
     }
 
     // === GETTERS y SETTERS ===

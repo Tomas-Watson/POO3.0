@@ -27,11 +27,13 @@ public class ConfiguracionPongGUI extends JFrame {
     private final JLabel infoLabel = new JLabel("Haz clic en una acción y luego presiona una tecla");
 
     private final Pong juego; 
+    private final ConfiguracionPong config;
 
     private boolean cerrada = false; 
 
-    public ConfiguracionPongGUI(Pong juego) {
+    public ConfiguracionPongGUI(Pong juego,ConfiguracionPong config) {
         this.juego = juego;
+        this.config = config;
         setTitle("Configuración de Teclas - Pong");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -42,7 +44,7 @@ public class ConfiguracionPongGUI extends JFrame {
 
         // Panel para los controles
         JPanel panelControles = new JPanel(new GridLayout(5, 2, 10, 10));
-        ConfiguracionPong config = ConfiguracionPong.get();
+        
         teclasTemp.putAll(config.getTeclas());
 
         addLabelYBoton(panelControles, "Jugador 1 Subir", "J1_UP");

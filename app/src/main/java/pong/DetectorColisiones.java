@@ -1,7 +1,6 @@
 package pong;
 import java.awt.Rectangle;
 
-import util.Configuracion;
 import util.Sonido;
 
 public class DetectorColisiones extends Rectangle {
@@ -10,22 +9,24 @@ public class DetectorColisiones extends Rectangle {
         private final static int ALTO_PANTALLA = 600;
 
         private final Sonido sonido;
+        private final ConfiguracionPong config;
 
-        public DetectorColisiones(Sonido sonido) {
+        public DetectorColisiones(Sonido sonido,ConfiguracionPong config) {
                 this.sonido = sonido;
+                this.config = config;
         }
 
         public void colisionPelotaContraBordesSupInf(Pelota pelotita){
         // Colisión de la pelota con los bordes
                 if (pelotita.getX() < 0 || pelotita.getX() + pelotita.getRadio() * 2 > ANCHO_PANTALLA) {
                         pelotita.rebotarHorizontal();
-                        if (ConfiguracionPong.get().isSonidoActivado()) {
+                        if (config.isSonidoActivado()) {
                                 sonido.reproducirEfecto("musica/Rebote.wav");
                         }
                 }
                 if (pelotita.getY() < 30 || pelotita.getY() + pelotita.getRadio() * 2 > ALTO_PANTALLA) {
                         pelotita.rebotarVertical();
-                        if (ConfiguracionPong.get().isSonidoActivado()) {
+                        if (config.isSonidoActivado()) {
                                 sonido.reproducirEfecto("musica/Rebote.wav");
                         }
                 }
@@ -43,7 +44,7 @@ public class DetectorColisiones extends Rectangle {
                         // Ajusta el ángulo de rebote según la distancia
                         pelotita.rebotarHorizontal();
                         pelotita.setDY((int)(pelotita.getVelocidadMax() * distancia));
-                        if (Configuracion.get().sonidoActivado) {
+                        if (config.isSonidoActivado()) {
                                 sonido.reproducirEfecto("musica/Rebote.wav");
                         }               
                 }   

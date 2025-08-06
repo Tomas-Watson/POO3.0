@@ -30,6 +30,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import JuegoLemmings.ConfiguracionLemmings;
+import pong.ConfiguracionPong;
 import util.Sonido;
 
 public class SistemaJuegos extends JPanel implements ActionListener {
@@ -40,6 +42,8 @@ public class SistemaJuegos extends JPanel implements ActionListener {
     //Scheduler sirve para verificar si un archivo fue modificado o no cada cierto tiempo 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     Sonido sonido = new Sonido();
+    ConfiguracionLemmings configLemmings = new ConfiguracionLemmings();
+    ConfiguracionPong configPong = new ConfiguracionPong();
 
     public SistemaJuegos() {
         ventana = new JFrame("Lanzador de Juegos");
@@ -207,10 +211,10 @@ public class SistemaJuegos extends JPanel implements ActionListener {
     private void iniciarJuego(String juego) {
         switch (juego) {
             case "Pong2D":
-                juegoActual = new pong.Pong(sonido);
+                juegoActual = new pong.Pong(sonido,configPong);
                 break;
             case "Lemmings":
-                juegoActual = new JuegoLemmings.Lemmings(sonido);
+                juegoActual = new JuegoLemmings.Lemmings(sonido,configLemmings);
                 break;
         }
         ventana.setVisible(false);

@@ -45,16 +45,16 @@ public class Pong extends Juego{
     private DetectorColisiones detector;
 
 
-    public Pong(Sonido sonido){
+    public Pong(Sonido sonido, ConfiguracionPong config) {
         super(sonido);
-        this.detector = new DetectorColisiones(sonido);
+        this.detector = new DetectorColisiones(sonido, config);
+        this.config = config;
         //super("Pong", ANCHO_PANTALLA,ALTO_PANTALLA);
     }
 
     @Override
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
-        ConfiguracionPong config = ConfiguracionPong.get();
 
         // Música de fondo
         if (config.isMusicaActivada()) {
@@ -144,14 +144,14 @@ public class Pong extends Juego{
 
 
                     SwingUtilities.invokeLater(() -> {
-                        ventanaConfigGUI = new ConfiguracionPongGUI(this); // Pasás referencia al juego
+                        ventanaConfigGUI = new ConfiguracionPongGUI(this,config); // Pasás referencia al juego
                     });
                 }
             }
 
             if (keyboard.isKeyPressed(KeyEvent.VK_Q)) {
                 if (!qPresionado) {
-                    config = ConfiguracionPong.get();
+                    
                     config.setSonidoActivado(!config.isSonidoActivado());;
                     qPresionado = true;
                 }
@@ -161,7 +161,7 @@ public class Pong extends Juego{
 
             if (keyboard.isKeyPressed(KeyEvent.VK_E)) {
                 if (!ePresionado) {
-                    config = ConfiguracionPong.get();
+                    
                     config.setMusicaActivada(!config.isMusicaActivada());
 
                     if (!config.isMusicaActivada()) {
@@ -189,7 +189,7 @@ public class Pong extends Juego{
 
             if (!enPausa) {
                 // Mover las paletas con las teclas configuradas
-                Map<String, Integer> teclas = ConfiguracionPong.get().getTeclas();
+                Map<String, Integer> teclas = config.getTeclas();
                 int j1Up = teclas.get("J1_UP");
                 int j1Down = teclas.get("J1_DOWN");
                 int j2Up = teclas.get("J2_UP");
@@ -229,7 +229,7 @@ public class Pong extends Juego{
                 }
 
                 if (contador.getGanador() != null) {
-                    if (!victoriaSonada && ConfiguracionPong.get().isSonidoActivado()) {
+                    if (!victoriaSonada && config.isSonidoActivado()) {
                         sonido.reproducirEfecto("musica/victoria.wav");
                         sonido.detenerMusica();
                         victoriaSonada = true;

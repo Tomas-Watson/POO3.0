@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ConfiguracionPong {
 
-    private static ConfiguracionPong instancia;
+    
 
     private boolean sonidoActivado;
     private boolean musicaActivada;
@@ -14,15 +14,8 @@ public class ConfiguracionPong {
     
     private Map<String, Integer> teclas;
 
-    private ConfiguracionPong() {
+    public ConfiguracionPong() {
         cargarPredeterminadas();
-    }
-
-    public static ConfiguracionPong get() {
-        if (instancia == null) {
-            instancia = new ConfiguracionPong();
-        }
-        return instancia;
     }
 
     public void cargarPredeterminadas() {

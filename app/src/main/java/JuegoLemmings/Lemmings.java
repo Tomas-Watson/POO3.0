@@ -97,10 +97,11 @@ public class Lemmings extends Juego {
 
     private boolean solicitarSalida = false;
 
-    public Lemmings(Sonido sonido) {
+    public Lemmings(Sonido sonido, ConfiguracionLemmings config) {
         // super("Lemmings", ANCHO_PANTALLA, ALTO_PANTALLA);
         super(sonido);
         this.sonido = sonido;
+        this.config = config;
     }
 
     @Override
@@ -225,7 +226,6 @@ public class Lemmings extends Juego {
     @Override
     public void gameStartup() {
         Log.info(getClass().getSimpleName(), "Ejecutando el juego");
-        this.config = ConfiguracionLemmings.get();
 
         int colEntrada = 2;
         int filaEntrada = 1;
@@ -293,9 +293,8 @@ public class Lemmings extends Juego {
 
             if (keyboard.isKeyPressed(KeyEvent.VK_Q)) {
                 if (!qPresionado) {
-                    config = ConfiguracionLemmings.get();
                     config.setSonidoActivado(!config.isSonidoActivado());
-                    System.out.println("Sonido: " + (config.isSonidoActivado() ? "ON" : "OFF"));
+                
                     qPresionado = true;
                 }
             } else {
@@ -304,9 +303,8 @@ public class Lemmings extends Juego {
 
             if (keyboard.isKeyPressed(KeyEvent.VK_E)) {
                 if (!ePresionado) {
-                    config = ConfiguracionLemmings.get();
+                    
                     config.setMusicaActivada(!config.isMusicaActivada());
-                    System.out.println("Música: " + (config.isMusicaActivada() ? "ON" : "OFF"));
 
                     if (!config.isMusicaActivada()) {
                         sonido.detenerMusica();
@@ -532,7 +530,7 @@ public class Lemmings extends Juego {
         // Tras una derrota, le doy la opcion al usuario de reiniciar con R o salir con
         // ESC
         if (gameOver) {
-            if (!victoriaSonada && ConfiguracionLemmings.get().isSonidoActivado()) {
+            if (!victoriaSonada && config.isSonidoActivado()) {
                 sonido.reproducirEfecto("musica/musicLemming/sound/derrota.wav");
                 sonido.detenerMusica();
                 victoriaSonada = true;
