@@ -10,10 +10,13 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sonido {
-    public static void reproducirEfecto(String path) {
+    //Cada instancia de sonido contorla su propia musica 
+    private Clip musica;
+
+    public void reproducirEfecto(String path) {
         new Thread(() -> {
             try {
-                URL url = Sonido.class.getClassLoader().getResource(path);
+                URL url = getClass().getClassLoader().getResource(path);
                 if (url == null) {
                     System.err.println("No se encontró el sonido: " + path);
                     return;
@@ -29,28 +32,28 @@ public class Sonido {
         }).start();
     }
 
-    public static Clip reproducirMusica(String archivo) {
+    public void reproducirMusica(String archivo) {
         try {
-            URL url = Sonido.class.getClassLoader().getResource(archivo);
+            detenerMusica(); // por si ya había una sonando
+
+            URL url = getClass().getClassLoader().getResource(archivo);
             if (url == null) {
                 throw new IllegalArgumentException("Archivo no encontrado: " + archivo);
             }
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-            clip.start();
-            return clip;
+            musica = AudioSystem.getClip();
+            musica.open(audioInputStream);
+            musica.loop(Clip.LOOP_CONTINUOUSLY);
+            musica.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
-    public static void detenerMusica(Clip clip) {
-        if (clip != null && clip.isRunning()) {
-            clip.stop();
-            clip.close();
+    public void detenerMusica() {
+        if (musica != null && musica.isRunning()) {
+            musica.stop();
+            musica.close();
         }
     }
 }

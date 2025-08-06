@@ -17,9 +17,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/*Esta clase es una ventana grafica que permite al jugador cambiar las teclas de control
+ * del juego Pong de forma interactiva 
+ */
 public class ConfiguracionPongGUI extends JFrame {
     
-    private final Map<String, JButton> botonesTecla = new HashMap<>();
+    private final Map<String, JButton> botonesTecla = new HashMap<>(); //Guarda los botones en la interfaz para poder actualizarlo 
     private final Map<String, Integer> teclasTemp = new HashMap<>();
     private final JLabel infoLabel = new JLabel("Haz clic en una acción y luego presiona una tecla");
 
@@ -100,6 +103,9 @@ public class ConfiguracionPongGUI extends JFrame {
 
     private void esperarTecla(JButton boton, String clave) {
         infoLabel.setText("Presiona una tecla...");
+        /*Espera que el usuario presione una tecla
+         * Actualiza el texto del boton con el nombre de la tecla elegida
+         */
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             public boolean dispatchKeyEvent(KeyEvent ke) {
                 if (ke.getID() == KeyEvent.KEY_PRESSED) {

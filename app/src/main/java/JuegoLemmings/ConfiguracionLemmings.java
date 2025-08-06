@@ -12,6 +12,8 @@ public class ConfiguracionLemmings {
     private boolean musicaActivada;
     private String pistaMusical;
     
+    //Declara una varaible llamada teclas que es un mapa, que asocia un String con un Integer
+    //Es como un diccionario: cada clave tiene asociado un valor 
     private Map<String, Integer> teclas;
 
     private ConfiguracionLemmings() {
@@ -30,15 +32,14 @@ public class ConfiguracionLemmings {
         musicaActivada = true;
         pistaMusical = "Zelda";
         
-
+        /*El HashMap es una implementacion concreta de la interfaz Map
+         * Usa una tabla Hash interna para guardar y acceder rapidamente a los elementos
+         * Aqui no importa el orden de insercion, ya que no se mantiene
+         */
         teclas = new HashMap<>();
         teclas.put("EFECTO", KeyEvent.VK_Q);
         teclas.put("MUSICA", KeyEvent.VK_E);
         teclas.put("PAUSA", KeyEvent.VK_SPACE);
-        teclas.put("J1_UP", KeyEvent.VK_UP);
-        teclas.put("J1_DOWN", KeyEvent.VK_DOWN);
-        teclas.put("J2_UP", KeyEvent.VK_W);
-        teclas.put("J2_DOWN", KeyEvent.VK_S);
     }
 
     // === GETTERS y SETTERS ===

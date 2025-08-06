@@ -42,8 +42,12 @@ public class Pong extends Juego{
     private boolean ventanaConfiguracionAbierta = false;
     private ConfiguracionPongGUI ventanaConfigGUI;
 
+    private DetectorColisiones detector;
 
-    public Pong(){
+
+    public Pong(Sonido sonido){
+        super(sonido);
+        this.detector = new DetectorColisiones(sonido);
         //super("Pong", ANCHO_PANTALLA,ALTO_PANTALLA);
     }
 
@@ -54,7 +58,7 @@ public class Pong extends Juego{
 
         // Música de fondo
         if (config.isMusicaActivada()) {
-            musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
+            sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
         }
 
         //Creo las paletas
@@ -110,7 +114,7 @@ public class Pong extends Juego{
     @Override
     public void gameShutdown() {
         
-        Sonido.detenerMusica(musica);
+        sonido.detenerMusica();
     }
 
     @Override
@@ -148,8 +152,7 @@ public class Pong extends Juego{
             if (keyboard.isKeyPressed(KeyEvent.VK_Q)) {
                 if (!qPresionado) {
                     config = ConfiguracionPong.get();
-                    config.setSonidoActivado(!config.isSonidoActivado());
-                    System.out.println("Sonido: " + (config.isSonidoActivado() ? "ON" : "OFF"));
+                    config.setSonidoActivado(!config.isSonidoActivado());;
                     qPresionado = true;
                 }
             } else {
@@ -160,12 +163,11 @@ public class Pong extends Juego{
                 if (!ePresionado) {
                     config = ConfiguracionPong.get();
                     config.setMusicaActivada(!config.isMusicaActivada());
-                    System.out.println("Música: " + (config.isMusicaActivada() ? "ON" : "OFF"));
 
                     if (!config.isMusicaActivada()) {
-                        Sonido.detenerMusica(musica);
+                        sonido.detenerMusica();
                     } else {
-                        musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
+                        sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
                     }
 
                     ePresionado = true;
@@ -213,31 +215,30 @@ public class Pong extends Juego{
                 pelota.moverse((delta * 25));
 
                 // Colisión pelota con paletas
-                DetectorColisiones.colisionPelotaRaqueta(pelota, p1);
-                DetectorColisiones.colisionPelotaRaqueta(pelota, p2);
+                detector.colisionPelotaRaqueta(pelota, p1);
+                detector.colisionPelotaRaqueta(pelota, p2);
 
                 // Goles
-                if (DetectorColisiones.colisionPelotaContraLateralIzquierda(pelota)) {
+                if (detector.colisionPelotaContraLateralIzquierda(pelota)) {
                     contador.sumarPuntoJugador2(); // Punto para jugador 2
                     reiniciarPosiciones();
                 }
-                if (DetectorColisiones.colisionPelotaContraLateralDerecha(pelota,ANCHO_PANTALLA)) {
+                if (detector.colisionPelotaContraLateralDerecha(pelota,ANCHO_PANTALLA)) {
                     contador.sumarPuntoJugador1(); // Punto para jugador 1
                     reiniciarPosiciones();
                 }
 
                 if (contador.getGanador() != null) {
                     if (!victoriaSonada && ConfiguracionPong.get().isSonidoActivado()) {
-                        Sonido.reproducirEfecto("musica/victoria.wav");
-                        Sonido.detenerMusica(musica);
+                        sonido.reproducirEfecto("musica/victoria.wav");
+                        sonido.detenerMusica();
                         victoriaSonada = true;
                     }
                     finJuego = true;
                 }
 
-                
-
-                DetectorColisiones.colisionPelotaContraBordesSupInf(pelota);
+                // Colisión pelota con bordes superior e inferior
+                detector.colisionPelotaContraBordesSupInf(pelota);
             }
         }
     }

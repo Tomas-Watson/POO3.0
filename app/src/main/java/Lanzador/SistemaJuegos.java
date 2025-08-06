@@ -30,11 +30,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import util.Sonido;
+
 public class SistemaJuegos extends JPanel implements ActionListener {
     private Juego juegoActual;
     private final ExecutorService ejecutorJuegos = Executors.newSingleThreadExecutor();
+    //El hilo "ejecutorJuegos", sirve para ejecutar los juegos que hay sin bloquear la GUI y es de un solo hilo 
     private JFrame ventana;
+    //Scheduler sirve para verificar si un archivo fue modificado o no cada cierto tiempo 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    Sonido sonido = new Sonido();
 
     public SistemaJuegos() {
         ventana = new JFrame("Lanzador de Juegos");
@@ -202,25 +207,30 @@ public class SistemaJuegos extends JPanel implements ActionListener {
     private void iniciarJuego(String juego) {
         switch (juego) {
             case "Pong2D":
-                juegoActual = new pong.Pong();
+                juegoActual = new pong.Pong(sonido);
                 break;
             case "Lemmings":
-                juegoActual = new JuegoLemmings.Lemmings();
+                juegoActual = new JuegoLemmings.Lemmings(sonido);
                 break;
         }
         ventana.setVisible(false);
 
+        //Esta seccion se encarga de lanzar el juego en un hilo separado
         ejecutorJuegos.submit(() -> {
             try {
                 juegoActual.run(1.0 / 60.0);
             } catch (Exception e) {
                 e.printStackTrace();
+                //Muestra un mensaje de error en una ventana, mostrandolo en un hilo correcto
+                //Si no se usa invokeLater, y la ejecucuion esta en un hilo que no corresponde, puede fallar la GUI 
                 SwingUtilities.invokeLater(() -> {
                     JOptionPane.showMessageDialog(ventana,
                         "Hubo un error al ejecutar el juego:\n" + e.getMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
                 });
             } finally {
+                //Toma una tarea runnable y la pone en una cola de eventos
+                //Cuando el hilo de la GUI esta libre, lo ejecuta
                 SwingUtilities.invokeLater(() -> {
                     mostrarMenuPrincipal();
                     ventana.setVisible(true);
@@ -229,6 +239,7 @@ public class SistemaJuegos extends JPanel implements ActionListener {
         });
     }
 
+    //Cuando el usuario cierra la ventana, los hilos deberian de liberarse
     private void cerrarYSalir() {
         if (!scheduler.isShutdown()) {
             scheduler.shutdownNow();

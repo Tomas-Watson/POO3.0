@@ -41,7 +41,9 @@ public class Ranking implements Serializable {
     public void ordenar() {
         jugadores.sort(
                 Comparator
+                        //Primero se ordena por la cnatidad de lemmings salvados, de mayor a menor 
                         .comparingInt(Jugador::getLemmingsSalvados).reversed()
+                        //Luego se ordena por el tiempo en segundos, de menor a mayor
                         .thenComparingLong(Jugador::getTiempoSegundos));
     }
 

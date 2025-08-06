@@ -97,8 +97,10 @@ public class Lemmings extends Juego {
 
     private boolean solicitarSalida = false;
 
-    public Lemmings() {
+    public Lemmings(Sonido sonido) {
         // super("Lemmings", ANCHO_PANTALLA, ALTO_PANTALLA);
+        super(sonido);
+        this.sonido = sonido;
     }
 
     @Override
@@ -189,11 +191,6 @@ public class Lemmings extends Juego {
             int y2 = y1 + fm.getHeight() + 10;
             g.drawString(linea2, x2, y2);
 
-            String instruccion = "Presiona ESC para salir";
-            g.setFont(new Font("Arial", Font.PLAIN, 18));
-            int xi = (ANCHO_PANTALLA - g.getFontMetrics().stringWidth(instruccion)) / 2;
-            g.drawString(instruccion, xi, y2 + 40);
-
             ranking.draw(g, ANCHO_PANTALLA);
         }
 
@@ -203,7 +200,7 @@ public class Lemmings extends Juego {
 
             g.setColor(Color.red);
             g.setFont(new Font("Arial", Font.BOLD, 32));
-            String msg1 = "¡Como vas a perder en un juego así, panflin!";
+            String msg1 = "¡Como te atreves a perder!";
             FontMetrics fm = g.getFontMetrics();
             int x1 = (ANCHO_PANTALLA - fm.stringWidth(msg1)) / 2;
             int y1 = ALTO_PANTALLA / 2 - fm.getHeight();
@@ -222,7 +219,7 @@ public class Lemmings extends Juego {
     public void gameShutdown() {
 
         Log.info(getClass().getSimpleName(), "Shutting down juego");
-        Sonido.detenerMusica(musica);
+        sonido.detenerMusica();
     }
 
     @Override
@@ -248,7 +245,7 @@ public class Lemmings extends Juego {
         // Cargo nivel actual, y ademas se carga el terreno
         cargarNivel(nivelActual);
         if (config.isMusicaActivada()) {
-            musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
+            sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
         }
 
         // Cargo el temporizador
@@ -312,9 +309,9 @@ public class Lemmings extends Juego {
                     System.out.println("Música: " + (config.isMusicaActivada() ? "ON" : "OFF"));
 
                     if (!config.isMusicaActivada()) {
-                        Sonido.detenerMusica(musica);
+                        sonido.detenerMusica();
                     } else {
-                        musica = Sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
+                        sonido.reproducirMusica("musica/" + config.getPistaMusical() + ".wav");
                     }
 
                     ePresionado = true;
@@ -336,7 +333,7 @@ public class Lemmings extends Juego {
                     if (!p.estaVivo()) {
                         it.remove();
                         if (config.isSonidoActivado()) {
-                            Sonido.reproducirEfecto("musica/musicLemming/sound/die.wav");
+                            sonido.reproducirEfecto("musica/musicLemming/sound/die.wav");
                         }
                         continue;
                     }
@@ -361,7 +358,7 @@ public class Lemmings extends Juego {
                         it.remove();
 
                         if (config.isSonidoActivado()) {
-                            Sonido.reproducirEfecto("musica/musicLemming/sound/LemmingSalvado.wav");
+                            sonido.reproducirEfecto("musica/musicLemming/sound/LemmingSalvado.wav");
                         }
 
                         // 3) Si justo acabo de llegar al necesario, se muestra el cartel del fin de
@@ -377,7 +374,7 @@ public class Lemmings extends Juego {
                     if (px + anchoSprite < 0 || px > ANCHO_PANTALLA || py + altoSprite < 0 || py > ALTO_PANTALLA) {
                         it.remove();
                         if (config.isSonidoActivado()) {
-                            Sonido.reproducirEfecto("musica/musicLemming/sound/die.wav");
+                            sonido.reproducirEfecto("musica/musicLemming/sound/die.wav");
                         }
                         continue; // pasamos al siguiente lemming
                     }
@@ -410,7 +407,7 @@ public class Lemmings extends Juego {
                         habilidadActual = sel;
 
                         if (config.isSonidoActivado()) {
-                            Sonido.reproducirEfecto("musica/musicLemming/sound/mousepre.wav");
+                            sonido.reproducirEfecto("musica/musicLemming/sound/mousepre.wav");
                         }
 
                         personajeSeleccionado = null; // deselecciona visualmente
@@ -458,7 +455,7 @@ public class Lemmings extends Juego {
                             Habilidad hab = new Habilidad(Habilidad.Tipo.values()[habilidadActual], clicado, terreno);
                             clicado.setHabilidadPendiente(hab);
                             if (config.isSonidoActivado()) {
-                                Sonido.reproducirEfecto("musica/musicLemming/sound/skill_add.wav");
+                                sonido.reproducirEfecto("musica/musicLemming/sound/skill_add.wav");
                             }
                             personajeSeleccionado = null;
                         }
@@ -499,9 +496,10 @@ public class Lemmings extends Juego {
         if (finJuego && !rankingGuardado) {
 
             if (config.isSonidoActivado()) {
-                Sonido.reproducirEfecto("musica/musicLemming/Victoria.wav");
+                sonido.reproducirEfecto("musica/musicLemming/Victoria.wav");
             }
 
+            //Trim elimina los espacios en blanco 
             String nombre = JOptionPane.showInputDialog(null, "¡Ganaste! Ingresá tu nombre:");
             if (nombre != null && !nombre.trim().isEmpty()) {
                 // suma todos los tiempos de niveles
@@ -535,8 +533,8 @@ public class Lemmings extends Juego {
         // ESC
         if (gameOver) {
             if (!victoriaSonada && ConfiguracionLemmings.get().isSonidoActivado()) {
-                Sonido.reproducirEfecto("musica/musicLemming/sound/derrota.wav");
-                Sonido.detenerMusica(musica);
+                sonido.reproducirEfecto("musica/musicLemming/sound/derrota.wav");
+                sonido.detenerMusica();
                 victoriaSonada = true;
             }
 

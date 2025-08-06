@@ -8,23 +8,30 @@ public class DetectorColisiones extends Rectangle {
         // Metodos de colisiones del juego Pong
         private final static int ANCHO_PANTALLA = 800;
         private final static int ALTO_PANTALLA = 600;
-        public static void colisionPelotaContraBordesSupInf(Pelota pelotita){
+
+        private final Sonido sonido;
+
+        public DetectorColisiones(Sonido sonido) {
+                this.sonido = sonido;
+        }
+
+        public void colisionPelotaContraBordesSupInf(Pelota pelotita){
         // Colisión de la pelota con los bordes
                 if (pelotita.getX() < 0 || pelotita.getX() + pelotita.getRadio() * 2 > ANCHO_PANTALLA) {
                         pelotita.rebotarHorizontal();
                         if (ConfiguracionPong.get().isSonidoActivado()) {
-                                Sonido.reproducirEfecto("musica/Rebote.wav");
+                                sonido.reproducirEfecto("musica/Rebote.wav");
                         }
                 }
                 if (pelotita.getY() < 30 || pelotita.getY() + pelotita.getRadio() * 2 > ALTO_PANTALLA) {
                         pelotita.rebotarVertical();
                         if (ConfiguracionPong.get().isSonidoActivado()) {
-                                Sonido.reproducirEfecto("musica/Rebote.wav");
+                                sonido.reproducirEfecto("musica/Rebote.wav");
                         }
                 }
         }
 
-        public static void colisionPelotaRaqueta(Pelota pelotita, Paleta raqueta){
+        public void colisionPelotaRaqueta(Pelota pelotita, Paleta raqueta){
                 Rectangle raquetazoBounds = new Rectangle((int) raqueta.getX(), (int) raqueta.getY(), (int) raqueta.getAncho(), (int) raqueta.getAlto());
                 Rectangle pelotitaBounds = new Rectangle((int) pelotita.getX(), (int) pelotita.getY(), pelotita.getRadio() * 2, pelotita.getRadio() * 2);
                 if (raquetazoBounds.intersects(pelotitaBounds)) {
@@ -37,12 +44,12 @@ public class DetectorColisiones extends Rectangle {
                         pelotita.rebotarHorizontal();
                         pelotita.setDY((int)(pelotita.getVelocidadMax() * distancia));
                         if (Configuracion.get().sonidoActivado) {
-                                Sonido.reproducirEfecto("musica/Rebote.wav");
+                                sonido.reproducirEfecto("musica/Rebote.wav");
                         }               
                 }   
         }
 
-        public static boolean colisionPelotaContraLateralIzquierda(Pelota pelotita){
+        public boolean colisionPelotaContraLateralIzquierda(Pelota pelotita){
                 boolean band = false;
                 if(pelotita.getX() <= 0){
                       band = true;
@@ -50,7 +57,7 @@ public class DetectorColisiones extends Rectangle {
                 return band;
         }
 
-        public static boolean colisionPelotaContraLateralDerecha(Pelota pelotita, int tamanoFondo){
+        public boolean colisionPelotaContraLateralDerecha(Pelota pelotita, int tamanoFondo){
                 boolean band = false;
                 if(pelotita.getX() + pelotita.getRadio() * 2 >= ANCHO_PANTALLA){
                        band = true;
